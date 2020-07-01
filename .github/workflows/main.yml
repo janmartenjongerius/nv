@@ -39,12 +39,12 @@ jobs:
           go-version: '1.14'
       - name: Build ${{ matrix.GOOS }}/${{ matrix.GOARCH }}
         run: |
-          [[ "$GOOS" == "windows" ]] && echo "::set-env name=EXTENSION::.exe";
-          go build -v -o "env-$GOOS-$GOARCH";
+          [[ "$GOOS" == "windows" ]] && echo "::set-env name=EXTENSION::.exe" && EXTENSION=".exe";
+          go build -v -o "env-$GOOS-$GOARCH""$EXTENSION";
       - name: Upload ${{ matrix.GOOS }}/${{ matrix.GOARCH }} artifact
         uses: actions/upload-artifact@v1
         with:
           name: env-${{ matrix.GOOS }}-${{ matrix.GOARCH }}${{ env.EXTENSION }}
-          path: env-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+          path: env-${{ matrix.GOOS }}-${{ matrix.GOARCH }}${{ env.EXTENSION }}
 
     
