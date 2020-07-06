@@ -37,7 +37,7 @@ jobs:
       - name: Build linux/${{ matrix.GOARCH }}
         run: |
           git fetch --tags
-          VERSION="$(git describe "${{ github.ref }}" --tags | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
+          VERSION="$(git describe "${{ github.ref }}" --tags --always | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
           BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
 
