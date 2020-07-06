@@ -19,17 +19,19 @@ jobs:
 
   draft-release:
     runs-on: ubuntu-latest
-    name: Draft release ${{ github.ref }}
-    id: draft_release
-    uses: actions/create-release@v1
-    needs: [test]
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      tag_name: ${{ github.ref }}
-      release_name: Release ${{ github.ref }}
-      draft: true
-      prerelease: false
+    name: Draft release
+    steps:
+      - name: Draft release ${{ github.ref }}
+        id: draft_release
+        uses: actions/create-release@v1
+        needs: [test]
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
 
   build-deb:
     runs-on: ubuntu-latest
