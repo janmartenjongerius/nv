@@ -30,13 +30,15 @@ jobs:
       GOARCH: ${{ matrix.GOARCH }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          clean: false
       - name: Setup go
         uses: actions/setup-go@v1
         with:
           go-version: '1.14'
       - name: Build linux/${{ matrix.GOARCH }}
         run: |
-          git fetch --tags
+          git fetch origin --tags
           VERSION="$(git describe "${{ github.ref }}" --tags --always | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
           BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
