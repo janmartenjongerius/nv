@@ -20,11 +20,11 @@ jobs:
   draft-release:
     runs-on: ubuntu-latest
     name: Draft release
+    needs: [test]
     steps:
       - name: Draft release ${{ github.ref }}
         id: draft_release
         uses: actions/create-release@v1
-        needs: [test]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
