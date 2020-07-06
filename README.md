@@ -15,6 +15,6 @@ It can be used to:
 
 | OS | Packages |
 |:---|:--------:|
-| <img src=https://simpleicons.org/icons/linux.svg width=16> Linux | [![DEB 32 Bit](https://img.shields.io/badge/DEB-32%20Bit-red?logo=debian)](releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/DEB-64%20Bit-red?logo=debian)](releases/latest/download/env_amd64.deb) |
+| <img src=https://simpleicons.org/icons/linux.svg width=16> Linux | [![DEB 32 Bit](https://img.shields.io/badge/DEB-32%20Bit-red?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/DEB-64%20Bit-red?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_amd64.deb) |
 | <img src=https://simpleicons.org/icons/windows.svg width=16> Windows | N/A |
 | <img src=https://simpleicons.org/icons/apple.svg width=16> Darwin | N/A |
