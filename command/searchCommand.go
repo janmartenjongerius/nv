@@ -8,10 +8,9 @@ import (
 	"time"
 )
 
-type searchCommand struct
-{
+type searchCommand struct {
 	BaseCommand
-	engine *search.Engine
+	engine      *search.Engine
 	suggestions int
 }
 
@@ -73,9 +72,9 @@ func NewSearchCommand(engine *search.Engine) Command {
 	flags := flag.NewFlagSet("search", flag.ContinueOnError)
 	cmd := searchCommand{
 		BaseCommand: BaseCommand{
-			flags:   flags,
+			flags: flags,
 		},
-		engine: engine,
+		engine:      engine,
 		suggestions: 5,
 	}
 

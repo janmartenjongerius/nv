@@ -6,12 +6,12 @@ import (
 )
 
 func TestNeighbors_Sort(t *testing.T) {
-	cases := []struct{
-		in Neighbors
+	cases := []struct {
+		in   Neighbors
 		want Neighbors
 	}{
 		{
-			in: Neighbors{},
+			in:   Neighbors{},
 			want: Neighbors{},
 		},
 		{
