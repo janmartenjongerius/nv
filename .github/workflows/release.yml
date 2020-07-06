@@ -39,7 +39,7 @@ jobs:
       matrix:
         GOARCH: [ '386', 'amd64' ]
     name: Build linux/${{ matrix.GOARCH }} DEB
-    needs: [draft_release]
+    needs: [draft-release]
     env:
       GOOS: 'linux'
       GOARCH: ${{ matrix.GOARCH }}
@@ -74,7 +74,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.draft_release.outputs.upload_url }}
+          upload_url: ${{ needs.draft-release.outputs.upload_url }}
           asset_path: ./env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
           asset_name: env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
