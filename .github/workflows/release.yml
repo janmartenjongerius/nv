@@ -55,8 +55,9 @@ jobs:
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
-          BUILD_BIN="${BUILD_DIR}/usr/local/bin"
+          BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
 
+          mkdir -p "$BUILD_DIR"
           mkdir -p "$BUILD_BIN"
           go build -v -o "$BUILD_BIN/env"
           cat <<CONFIG > "$BUILD_DIR/control"
