@@ -56,7 +56,7 @@ jobs:
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
           echo "::set-env name=VERSION::$VERSION"
       - name: Upload linux/${{ matrix.GOARCH }} artifact
-          uses: actions/upload-artifact@v1
-          with:
-            name: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
-            path: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+        uses: actions/upload-artifact@v1
+        with:
+          name: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+          path: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
