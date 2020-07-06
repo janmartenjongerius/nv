@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        GOARCH: [ '386', 'amd64' ]
+    name: Build linux/${{ matrix.GOARCH }} DEB
+    needs: [test]
+    env:
+      GOOS: 'linux'
+      GOARCH: ${{ matrix.GOARCH }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - name: Build linux/${{ matrix.GOARCH }}
+        env:
+          BUILD_BIN: "env_${{ github.ref }}_${{ matrix.GOARCH }}/DEBIAN/usr/local/bin"
+          BUILD_DIR: "env_${{ github.ref }}_${{ matrix.GOARCH }}/DEBIAN"
+        run: |
+          mkdir -p "$BUILD_BIN"
+          go build -v -o "$BUILD_BIN/env"
+          cat <<CONFIG > "$BUILD_DIR/control"
+          Package: env
+          Version: ${{ github.ref }}
+          Architecture: ${{ matrix.GOARCH }}
+          Essential: no
+          Priority: optional
+          Maintainer: Jan-Marten de Boer
+          Description: Environment lookup
+          CONFIG
+
+          dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+      - name: Create release ${{ github.ref }}
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - name: Upload linux/${{ matrix.GOARCH }} asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
+          asset_name: env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
+          asset_content_type: application/vnd.debian.binary-package
