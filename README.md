@@ -1,6 +1,7 @@
 # Introduction
 
 ![Build](https://github.com/johmanx10/env/workflows/Build/badge.svg)
+![Release](https://github.com/johmanx10/env/workflows/Release/badge.svg)
 
 Env is an alternative lookup tool for Environment Variables.
 It can be used to:
