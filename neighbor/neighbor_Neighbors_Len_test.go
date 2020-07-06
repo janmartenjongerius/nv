@@ -4,11 +4,11 @@ import "testing"
 
 func TestNeighbors_Len(t *testing.T) {
 	cases := []struct {
-		hood *Neighbors
+		hood     *Neighbors
 		expected int
 	}{
 		{
-			hood: &Neighbors{},
+			hood:     &Neighbors{},
 			expected: 0,
 		},
 		{

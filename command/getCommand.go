@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-type getCommand struct
-{
+type getCommand struct {
 	BaseCommand
 	cfg *config.Config
 }
