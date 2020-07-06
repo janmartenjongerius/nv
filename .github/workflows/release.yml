@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Draft release
     needs: [test]
+    outputs:
+      upload_url: ${{ steps.draft.outputs.upload_url }}
     steps:
       - name: Draft release ${{ github.ref }}
         id: draft
