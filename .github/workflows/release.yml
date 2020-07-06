@@ -17,13 +17,27 @@ jobs:
           go-version: '1.14'
       - run: go vet ./... && go test ./...
 
+  draft-release:
+    runs-on: ubuntu-latest
+    name: Draft release ${{ github.ref }}
+    id: draft_release
+    uses: actions/create-release@v1
+    needs: [test]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      tag_name: ${{ github.ref }}
+      release_name: Release ${{ github.ref }}
+      draft: true
+      prerelease: false
+
   build-deb:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         GOARCH: [ '386', 'amd64' ]
     name: Build linux/${{ matrix.GOARCH }} DEB
-    needs: [test]
+    needs: [draft_release]
     env:
       GOOS: 'linux'
       GOARCH: ${{ matrix.GOARCH }}
@@ -33,16 +47,19 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '1.14'
+      - name: Create release ${{ github.ref }}
+
       - name: Build linux/${{ matrix.GOARCH }}
-        env:
-          BUILD_BIN: "env_${{ github.ref }}_${{ matrix.GOARCH }}/DEBIAN/usr/local/bin"
-          BUILD_DIR: "env_${{ github.ref }}_${{ matrix.GOARCH }}/DEBIAN"
         run: |
+          VERSION="$(basename "/${{ github.ref }}")"
+          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
+          BUILD_BIN="${BUILD_DIR}/usr/local/bin"
+
           mkdir -p "$BUILD_BIN"
           go build -v -o "$BUILD_BIN/env"
           cat <<CONFIG > "$BUILD_DIR/control"
           Package: env
-          Version: ${{ github.ref }}
+          Version: $VERSION
           Architecture: ${{ matrix.GOARCH }}
           Essential: no
           Priority: optional
@@ -51,22 +68,13 @@ jobs:
           CONFIG
 
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
-      - name: Create release ${{ github.ref }}
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
+          echo "::set-env name=VERSION::$VERSION"
       - name: Upload linux/${{ matrix.GOARCH }} asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ needs.draft_release.outputs.upload_url }}
           asset_path: ./env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
           asset_name: env_${{ github.ref }}_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
