@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          clean: false
+          fetch-depth: 0
       - name: Setup go
         uses: actions/setup-go@v1
         with:
