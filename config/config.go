@@ -64,16 +64,26 @@ func NewConfig(vars ...*Variable) *Config {
 
 // Parse the given variable strings into a Config object.
 func Parse(variables []string, separator string) *Config {
-	var (
-		v string
-		config = NewConfig()
-	)
+	config := NewConfig()
 
-	for _, v = range variables {
+	for _, v := range variables {
 		var tuple = strings.SplitN(v, separator, 2)
 
 		config.SetVariable(&Variable{tuple[0], tuple[1]})
 	}
 
 	return config
+}
+
+// Map the Config to a map of interface{} types.
+func (c Config) MapInterfaces() map[string]*interface{} {
+	keys := c.Keys()
+	exported := make(map[string]*interface{}, len(keys))
+
+	for _, key := range keys {
+		i := reflect.ValueOf(c[key]).Interface()
+		exported[key] = &i
+	}
+
+	return exported
 }
