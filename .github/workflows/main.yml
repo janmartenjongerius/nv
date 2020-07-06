@@ -17,3 +17,46 @@ jobs:
         with:
           go-version: '1.14'
       - run: go vet ./... && go test ./...
+
+  build-deb:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        GOARCH: [ '386', 'amd64' ]
+    name: Build linux/${{ matrix.GOARCH }} DEB
+    needs: [test]
+    env:
+      GOOS: 'linux'
+      GOARCH: ${{ matrix.GOARCH }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - name: Build linux/${{ matrix.GOARCH }}
+        run: |
+          VERSION="$(git describe "${{ github.ref }}" --tags | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
+          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
+          BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
+
+          mkdir -p "$BUILD_DIR"
+          mkdir -p "$BUILD_BIN"
+          go build -v -o "$BUILD_BIN/env"
+          cat <<CONFIG > "$BUILD_DIR/control"
+          Package: env
+          Version: $VERSION
+          Architecture: ${{ matrix.GOARCH }}
+          Essential: no
+          Priority: optional
+          Maintainer: Jan-Marten de Boer
+          Description: Environment lookup
+          CONFIG
+
+          dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+          echo "::set-env name=VERSION::$VERSION"
+      - name: Upload linux/${{ matrix.GOARCH }} artifact
+          uses: actions/upload-artifact@v1
+          with:
+            name: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+            path: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
