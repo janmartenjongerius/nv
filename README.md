@@ -13,9 +13,8 @@ It can be used to:
 
 # Supported platforms
 
-| OS | Architecture | Packages |
-|:---|:-------------|:--------:|
-| <img src=https://simpleicons.org/icons/linux.svg width=16> Linux | 386, amd64 | <img src=https://simpleicons.org/icons/debian.svg width=16> DEB |
-| <img src=https://simpleicons.org/icons/windows.svg width=16> Windows | 386, amd64 | N/A |
-| <img src=https://simpleicons.org/icons/apple.svg width=16> Darwin | 386, amd64 | N/A |
-
+| OS | Packages |
+|:---|:--------:|
+| <img src=https://simpleicons.org/icons/linux.svg width=16> Linux | [![DEB 32 Bit](https://img.shields.io/badge/DEB-32%20Bit-red?logo=debian)](releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/DEB-64%20Bit-red?logo=debian)](releases/latest/download/env_amd64.deb) |
+| <img src=https://simpleicons.org/icons/windows.svg width=16> Windows | N/A |
+| <img src=https://simpleicons.org/icons/apple.svg width=16> Darwin | N/A |
