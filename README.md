@@ -1,9 +1,10 @@
 # Introduction
 
-
-![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/johmanx10/env?include_prereleases&label=Stable&logo=go)
 ![Build](https://github.com/johmanx10/env/workflows/Build/badge.svg)
 ![Release](https://github.com/johmanx10/env/workflows/Release/badge.svg)
+![Stable version](https://img.shields.io/github/v/release/johmanx10/env?include_prereleases&label=)
+![Code size in bytes](https://img.shields.io/github/languages/code-size/johmanx10/env?label=&logo=git)
+![License](https://img.shields.io/github/license/johmanx10/env?label=&color=blue)
 
 Env is an alternative lookup tool for Environment Variables.
 It can be used to:
@@ -12,8 +13,9 @@ It can be used to:
 - Search for environment variables, interactively and programmatically.
 - Export a list of required environment variables to a DotEnv file.
 
-Env is completely written in ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/johmanx10/env?logo=go)
-and builds into a native binary.
+Env is ![GitHub top language](https://img.shields.io/github/languages/top/johmanx10/env?label=) written in
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/johmanx10/env?logo=go&label=) and builds
+into a native binary.
 
 # Downloads
 
