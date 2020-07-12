@@ -1,3 +1,15 @@
+/*
+TODO:
+	> Split up in separate files
+		> command.go
+		> application.go
+		> descriptor.go
+	> Document symbols
+	> Write unit tests
+
+Final notes:
+	This package DOES NOT hold a stable public API and is meant for internal purposes only.
+ */
 package command
 
 import (

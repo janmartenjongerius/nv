@@ -1,3 +1,17 @@
+/*
+TODO:
+	> Write unit tests
+	> Document symbols
+	> Convert type of Request.Suggestions:
+		> uint -> uint8
+			255 suggestions is enough
+	> Add additional commands to manage environment variables
+		> set
+		> unset
+		> export
+		> import
+	> Rename KeyParallel -> CtxParallel
+ */
 package search
 
 import (

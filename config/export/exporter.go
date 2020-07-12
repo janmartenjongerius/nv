@@ -1,3 +1,9 @@
+/**
+TODO:
+	> Write unit tests
+	> Document symbols
+	> Create YAML formatter as plugin (.so)
+ */
 package export
 
 import (
@@ -6,7 +12,6 @@ import (
 	"janmarten.name/env/config"
 	"sort"
 )
-
 
 const UnknownFormatterError = "unknown format requested"
 
