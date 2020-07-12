@@ -1,0 +1,7 @@
+theme: jekyll-theme-cayman
+title: Env
+description: Environment lookup
+markdown: CommonMarkGhPages
+commonmark:
+  options: ["SMART", "FOOTNOTES"]
+  extensions: ["strikethrough", "autolink", "table", "tagfilter"]

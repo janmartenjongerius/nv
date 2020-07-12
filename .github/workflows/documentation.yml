@@ -1,0 +1,20 @@
+name: Forward documentation
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  push_to_gh-pages_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Push changes to Github Pages
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true
