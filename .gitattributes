@@ -1,0 +1,4 @@
+.git*   export-ignore
+_*      export-ignore
+*.md    export-ignore
+/assets export-ignore
