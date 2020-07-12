@@ -1,4 +1,4 @@
-name: Forward documentation
+name: Documentation
 
 on:
   push:
@@ -6,12 +6,47 @@ on:
 
 jobs:
   push_to_gh-pages_branch:
+    name: "Push to gh-pages"
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Add custom layout
+        env:
+          LAYOUT_DEFAULT: |
+            <!DOCTYPE html>
+            <html lang="en-US">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="go-import" content="janmarten.name/env git https://github.com/johmanx10/env">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <meta name="theme-color" content="#157878">
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+                <link rel="stylesheet" href="https://pages-themes.github.io/cayman/assets/css/style.css?v=d4cdac15d273c45cb6d9a0b1d2772a21008ea063">
+            </head>
+            <body>
+            <header class="page-header" role="banner">
+                <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
+                <h2 class="project-tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
+            </header>
+
+            <main id="content" class="main-content" role="main">
+                {{ content }}
+            </main>
+            </body>
+            </html>
+        run: |
+          mkdir _layouts && echo "$LAYOUT_DEFAULT" > _layouts/default.html
+      - uses: EndBug/add-and-commit@v4
+        with:
+          add: _layouts
+          author_name: Jan-Marten de Boer
+          author_email: github@johmanx.com
+          force: true
+          message: Add custom layout
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push changes to Github Pages
         uses: ad-m/github-push-action@master
         with:
