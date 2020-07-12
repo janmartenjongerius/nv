@@ -17,6 +17,8 @@ Env is ![GitHub top language](https://img.shields.io/github/languages/top/johman
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/johmanx10/env?logo=go&label=) and builds
 into a native binary.
 
+See the [user documentation](http://janmarten.name/env) for more information and pre-built downloads.
+
 # Installation
 
 ```
