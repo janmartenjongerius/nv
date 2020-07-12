@@ -1,11 +1,5 @@
 # Introduction
 
-[![Build](https://github.com/johmanx10/env/workflows/Build/badge.svg)](https://github.com/johmanx10/env/actions?query=workflow%3ABuild)
-[![Release](https://github.com/johmanx10/env/workflows/Release/badge.svg)](https://github.com/johmanx10/env/actions?query=workflow%3ARelease)
-[![Stable version](https://img.shields.io/github/v/release/johmanx10/env?include_prereleases&label=)](https://github.com/johmanx10/env/releases/latest)
-[![Code size in bytes](https://img.shields.io/github/languages/code-size/johmanx10/env?label=&logo=git)](https://github.com/johmanx10/env)
-[![License](https://img.shields.io/github/license/johmanx10/env?label=&color=blue)](https://github.com/johmanx10/env/blob/main/LICENSE)
-
 More than ever, modern development relies on environment variables. To easily debug the local environment or export it,
 a chain of commands specific to your operating system would do. However, `env` wants to solve this in a modern way,
 cross platform.
