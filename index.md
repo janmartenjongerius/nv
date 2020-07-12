@@ -23,6 +23,10 @@ cross platform.
 
 [![Source](https://img.shields.io/badge/dynamic/json.svg?label=Source&url=https://api.github.com/repos/johmanx10/env&query=$.default_branch&logo=go&color=00acd7&logoColor=7fd5ea)](https://github.com/johmanx10/env/archive/main.zip)
 
+```
+go install janmarten.name/env
+```
+
 For builds from source, please refer to
 [Go platform specific information](https://github.com/golang/go/wiki#platform-specific-information).
 

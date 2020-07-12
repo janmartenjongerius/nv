@@ -16,3 +16,9 @@ It can be used to:
 Env is ![GitHub top language](https://img.shields.io/github/languages/top/johmanx10/env?label=) written in
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/johmanx10/env?logo=go&label=) and builds
 into a native binary.
+
+# Installation
+
+```
+go install janmarten.name/env
+```
