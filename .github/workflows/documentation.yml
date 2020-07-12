@@ -14,6 +14,24 @@ jobs:
           fetch-depth: 0
       - name: Add custom layout
         env:
+          CONFIG: |
+            exclude:
+              - .github
+              - command
+              - config
+              - neighbor
+              - search
+              - .gitattributes
+              - .gitignore
+              - go.mod
+              - go.sum
+              - main.go
+              - README.md
+            markdown: CommonMarkGhPages
+            commonmark:
+              options: ["SMART", "FOOTNOTES"]
+              extensions: ["strikethrough", "autolink", "table", "tagfilter"]
+
           LAYOUT_DEFAULT: |
             <!DOCTYPE html>
             <html lang="en-US">
@@ -38,9 +56,10 @@ jobs:
             </html>
         run: |
           mkdir _layouts && echo "$LAYOUT_DEFAULT" > _layouts/default.html
+          echo "$CONFIG" > _config.yml
       - uses: EndBug/add-and-commit@v4
         with:
-          add: _layouts
+          add: .
           author_name: Jan-Marten de Boer
           author_email: github@johmanx.com
           force: true
