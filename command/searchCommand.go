@@ -78,6 +78,7 @@ func NewSearchCommand(engine search.Engine) Command {
 	cmd := searchCommand{
 		BaseCommand: BaseCommand{
 			flags: flags,
+			description: "Fuzzy search for environment variables.",
 		},
 		engine:      engine,
 		suggestions: 5,

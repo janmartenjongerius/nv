@@ -2,11 +2,9 @@ package command
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"sort"
 )
@@ -19,11 +17,51 @@ type IO interface {
 	WriteErrorLn(message string)
 }
 
-type Command interface {
+type Describable interface {
 	Name() string
+	Description() string
+}
+
+type Describers []Describable
+
+func (d Describers) Len() int {
+	return len(d)
+}
+
+func (d Describers) Less(i, j int) bool {
+	return d[1].Name() < d[j].Name()
+}
+
+func (d Describers) Swap(i, j int) {
+	d[i], d[j] = d[j], d[i]
+}
+
+type descriptor struct {
+	Describable
+	name        string
+	description string
+}
+
+func (d *descriptor) Name() string {
+	return d.name
+}
+
+func (d *descriptor) SetName(name string) {
+	d.name = name
+}
+
+func (d *descriptor) Description() string {
+	return d.description
+}
+
+func (d *descriptor) SetDescription(description string) {
+	d.description = description
+}
+
+type Command interface {
+	Describable
 	Init(args []string) ([]string, error)
 	Run(args []string, io IO) int
-	Usage(buffer io.Writer)
 }
 
 type Commands map[string]*Command
@@ -31,10 +69,13 @@ type Commands map[string]*Command
 type Runner interface {
 	Run(command string, args []string) int
 	Register(cmd Command)
-	Usage(collapse bool)
+	Usage()
 }
 
 type Application struct {
+	descriptor
+	IO
+	Runner
 	input    *bufio.Reader
 	output   *os.File
 	error    *os.File
@@ -42,29 +83,24 @@ type Application struct {
 	context  context.Context
 }
 
-func (app Application) Usage(collapse bool) {
-	usage := ""
-	usages := make(map[string]*bytes.Buffer, len(app.commands))
-	names := make([]string, len(app.commands))
+func (app Application) Usage() {
+	usage := fmt.Sprintf("%s\n\n", app.Description())
+	usage += fmt.Sprintf("Usage:\n\n\t%s <command> [arguments]\n\n", app.Name())
+	usage += "The commands are:\n\n"
+	commands := make(Describers, 0)
 
-	for name, cmd := range app.commands {
-		names = append(names, name)
-
-		if collapse {
-			buffer := bytes.NewBufferString("")
-			(*cmd).Usage(buffer)
-			usages[name] = buffer
-		}
+	for _, cmd := range app.commands {
+		commands = append(commands, *cmd)
 	}
 
-	sort.Strings(names)
+	sort.Sort(commands)
 
-	for _, name := range names {
-		usage += fmt.Sprintf("%s\n", name)
-
-		if buffer, ok := usages[name]; ok == true {
-			usage += fmt.Sprintf("%s\n", buffer.String())
-		}
+	for _, command := range commands {
+		usage += fmt.Sprintf(
+			"\t%-10s %s\n",
+			command.Name(),
+			command.Description(),
+		)
 	}
 
 	app.Write(usage)
@@ -79,7 +115,7 @@ func (app Application) Run(command string, args []string) int {
 		cmd, ok := app.commands[command]
 
 		if ok == false {
-			app.Usage(false)
+			app.Usage()
 			return 1
 		}
 
@@ -143,30 +179,32 @@ func ExtractCommandArgs(input []string) (cmd string, args []string) {
 	return cmd, args
 }
 
-func NewApplication(ctx context.Context, input *os.File, output *os.File, error *os.File) Runner {
-	return Application{
-		context:  ctx,
-		input:    bufio.NewReader(input),
-		output:   output,
-		error:    error,
-		commands: make(Commands),
+func NewApplication(ctx context.Context, input *os.File, output *os.File, error *os.File) *Application {
+	return &Application{
+		descriptor: descriptor{
+			name: os.Args[0],
+			description: "",
+		},
+		context:    ctx,
+		input:      bufio.NewReader(input),
+		output:     output,
+		error:      error,
+		commands:   make(Commands),
 	}
 }
 
 type BaseCommand struct {
-	flags *flag.FlagSet
-}
-
-func (cmd BaseCommand) Usage(buffer io.Writer) {
-	writer := cmd.flags.Output()
-
-	cmd.flags.SetOutput(buffer)
-	cmd.flags.Usage()
-	cmd.flags.SetOutput(writer)
+	Command
+	flags       *flag.FlagSet
+	description string
 }
 
 func (cmd BaseCommand) Name() string {
 	return cmd.flags.Name()
+}
+
+func (cmd BaseCommand) Description() string {
+	return cmd.description
 }
 
 func (cmd BaseCommand) Init(args []string) ([]string, error) {

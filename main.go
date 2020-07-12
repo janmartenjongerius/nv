@@ -21,6 +21,7 @@ func main() {
 	engine := search.New(ctx, cfg.MapInterfaces())
 
 	app := command.NewApplication(ctx, os.Stdin, os.Stdout, os.Stderr)
+	app.SetDescription("Look up and manage environment variables.")
 	app.Register(command.NewGetCommand(engine, exportFactory))
 	app.Register(command.NewSearchCommand(engine))
 

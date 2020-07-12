@@ -58,6 +58,7 @@ func NewGetCommand(engine search.Engine, exportFactory export.Factory) Command {
 	cmd := &getCommand{
 		BaseCommand: BaseCommand{
 			flags: flags,
+			description: "Get the value of the requested environment variables.",
 		},
 		engine: engine,
 		output: "text",
