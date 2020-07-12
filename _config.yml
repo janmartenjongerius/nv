@@ -1,7 +1,8 @@
 theme: jekyll-theme-cayman
-title: Env
-description: Environment lookup
+title: Environment lookup
+description: Interactive and programmable environment control
 markdown: CommonMarkGhPages
+
 commonmark:
   options: ["SMART", "FOOTNOTES"]
   extensions: ["strikethrough", "autolink", "table", "tagfilter"]
