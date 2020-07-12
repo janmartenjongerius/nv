@@ -3,11 +3,12 @@ package search
 import (
 	"context"
 	"janmarten.name/env/neighbor"
-	"reflect"
 )
 
 type requestChan chan *Request
 type responseChan chan *Response
+
+const KeyParallel contextKey = "parallel"
 
 type Response struct {
 	Match       *interface{}
@@ -17,26 +18,34 @@ type Response struct {
 
 type Request struct {
 	Query       string
-	Suggestions int
+	Suggestions uint
 }
 
-type Engine struct {
+type Engine interface {
+	Query(query string, suggestions uint) Engine
+	QueryAll(queries []string, suggestions uint) Engine
+	Result() *Response
+	Results() []*Response
+}
+
+type searchEngine struct {
+	Engine
 	ctx       context.Context
 	targets   map[string]*interface{}
 	requests  requestChan
 	responses responseChan
 }
 
-type ContextKey string
+type contextKey string
 
-func NewEngine(ctx context.Context, targets map[string]*interface{}) *Engine {
-	numParallel, ok := ctx.Value(ContextKey("parallel")).(int)
+func New(ctx context.Context, targets map[string]*interface{}) Engine {
+	numParallel, ok := ctx.Value(KeyParallel).(uint)
 
 	if ok == false || numParallel < 1 {
 		numParallel = 1
 	}
 
-	engine := &Engine{
+	engine := &searchEngine{
 		ctx:       ctx,
 		targets:   targets,
 		requests:  make(requestChan, numParallel),
@@ -46,7 +55,7 @@ func NewEngine(ctx context.Context, targets map[string]*interface{}) *Engine {
 	return engine
 }
 
-func (engine Engine) Query(query string, suggestions int) *Engine {
+func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	select {
 	case <-engine.ctx.Done():
 		break
@@ -66,7 +75,15 @@ func (engine Engine) Query(query string, suggestions int) *Engine {
 	return &engine
 }
 
-func (engine Engine) processNextRequest() {
+func (engine searchEngine) QueryAll(queries []string, suggestions uint) Engine {
+	for _, q := range queries {
+		engine.Query(q, suggestions)
+	}
+
+	return &engine
+}
+
+func (engine searchEngine) processNextRequest() {
 	select {
 	case <-engine.ctx.Done():
 		break
@@ -86,10 +103,15 @@ func (engine Engine) processNextRequest() {
 	}
 }
 
-func (engine Engine) suggestions(request *Request) []string {
-	var suggestions []string
+func (engine searchEngine) suggestions(request *Request) []string {
+	suggestions := make([]string, 0)
+	neighbors := neighbor.FindNearest(
+		request.Query,
+		engine.targetKeys(),
+		int(request.Suggestions),
+	)
 
-	if neighbors := neighbor.FindNearest(request.Query, engine.targetKeys(), request.Suggestions); neighbors != nil {
+	if neighbors != nil {
 		for _, n := range neighbors {
 			suggestions = append(suggestions, n.Name)
 		}
@@ -98,16 +120,26 @@ func (engine Engine) suggestions(request *Request) []string {
 	return suggestions
 }
 
-func (engine Engine) targetKeys() []string {
-	var keys []string
+func (engine searchEngine) targetKeys() []string {
+	keys := make([]string, 0)
 
-	for _, k := range reflect.ValueOf(engine.targets).MapKeys() {
-		keys = append(keys, k.String())
+	for k, _ := range engine.targets {
+		keys = append(keys, k)
 	}
 
 	return keys
 }
 
-func (engine Engine) Result() *Response {
+func (engine searchEngine) Result() *Response {
 	return <-engine.responses
+}
+
+func (engine searchEngine) Results() []*Response {
+	responses := make([]*Response, 0)
+
+	for len(engine.requests) > 0 || len(engine.responses) > 0 {
+		responses = append(responses, <-engine.responses)
+	}
+
+	return responses
 }

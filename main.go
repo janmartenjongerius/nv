@@ -4,25 +4,29 @@ import (
 	"context"
 	"janmarten.name/env/command"
 	"janmarten.name/env/config"
+	"janmarten.name/env/config/export"
 	"janmarten.name/env/search"
 	"os"
+	"runtime"
 )
 
 func main() {
 	cfg := config.Parse(os.Environ(), "=")
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
+	ctx = context.WithValue(ctx, search.KeyParallel, runtime.GOMAXPROCS(0))
 	defer cancel()
 
+	exportFactory := export.NewFactory(os.Stdout)
+	engine := search.New(ctx, cfg.MapInterfaces())
+
 	app := command.NewApplication(ctx, os.Stdin, os.Stdout, os.Stderr)
-	app.Register(command.NewGetCommand(cfg))
-	app.Register(command.NewSearchCommand(
-		search.NewEngine(ctx, cfg.MapInterfaces())))
+	app.Register(command.NewGetCommand(engine, exportFactory))
+	app.Register(command.NewSearchCommand(engine))
 
-	if len(os.Args) < 2 {
-		app.Usage(false)
-		os.Exit(0)
-	}
-
-	os.Exit(app.Run(os.Args[1], os.Args[2:]))
+	os.Exit(
+		app.Run(
+			command.ExtractCommandArgs(os.Args[1:]),
+		),
+	)
 }

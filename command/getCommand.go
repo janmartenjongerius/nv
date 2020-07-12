@@ -4,12 +4,16 @@ import (
 	"flag"
 	"fmt"
 	"janmarten.name/env/config"
+	"janmarten.name/env/config/export"
+	"janmarten.name/env/search"
 	"strings"
 )
 
 type getCommand struct {
 	BaseCommand
-	cfg *config.Config
+	engine search.Engine
+	output string
+	exportFactory export.Factory
 }
 
 func (cmd getCommand) Run(args []string, io IO) int {
@@ -17,47 +21,55 @@ func (cmd getCommand) Run(args []string, io IO) int {
 		return 1
 	}
 
-	var missing []string
+	missing := make([]string, 0)
+	found := make([]*config.Variable, 0)
+	exporter, _ := cmd.exportFactory(cmd.output)
 
-	prependName := len(args) > 1
+	cmd.engine.QueryAll(args, 0)
 
-	for _, a := range args {
-		if v, e := cmd.cfg.Variable(a); e == nil {
-			io.WriteLn(cmd.formatResult(v, prependName))
+	for _, r := range cmd.engine.Results() {
+		if r.Match == nil {
+			missing = append(missing, r.Request.Query)
 			continue
 		}
 
-		missing = append(missing, a)
+		if v, ok := (*r.Match).(*config.Variable); ok == true {
+			found = append(found, v)
+		}
 	}
 
+	_ = exporter.ExportList(found)
+
 	if len(missing) > 0 {
-		io.WriteLn(
+		io.WriteErrorLn(
 			fmt.Sprintf(
-				"Could not find %v.\n",
-				strings.Join(missing, ", ")))
+				"Could not find %v.",
+				strings.Join(missing, ", "),
+			),
+		)
 		return 2
 	}
 
 	return 0
 }
 
-func (cmd getCommand) formatResult(v *config.Variable, prependName bool) string {
-	result := ""
-
-	if prependName {
-		result += fmt.Sprintf("%v=", v.Key)
-	}
-
-	result += fmt.Sprintf("%v", v.Value)
-
-	return result
-}
-
-func NewGetCommand(cfg *config.Config) Command {
-	return &getCommand{
+func NewGetCommand(engine search.Engine, exportFactory export.Factory) Command {
+	flags := flag.NewFlagSet("get", flag.ContinueOnError)
+	cmd := &getCommand{
 		BaseCommand: BaseCommand{
-			flags: flag.NewFlagSet("get", flag.ContinueOnError),
+			flags: flags,
 		},
-		cfg: cfg,
+		engine: engine,
+		output: "text",
+		exportFactory: exportFactory,
 	}
+
+	flags.StringVar(
+		&cmd.output,
+		"output",
+		cmd.output,
+		fmt.Sprintf("The format to use for output. Can be: %v", strings.Join(export.GetFormats(), ", ")),
+	)
+
+	return cmd
 }

@@ -53,8 +53,6 @@ func (c Config) Keys() []string {
 func NewConfig(vars ...*Variable) *Config {
 	c := Config{}
 
-	c.SetVariable(&Variable{"self", c})
-
 	for _, v := range vars {
 		c.SetVariable(v)
 	}

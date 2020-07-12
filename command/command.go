@@ -131,6 +131,18 @@ func (app Application) Register(cmd Command) {
 	app.commands[cmd.Name()] = &cmd
 }
 
+func ExtractCommandArgs(input []string) (cmd string, args []string) {
+	if len(input) > 0 {
+		cmd = input[0]
+	}
+
+	if len(input) > 1 {
+		args = input[1:]
+	}
+
+	return cmd, args
+}
+
 func NewApplication(ctx context.Context, input *os.File, output *os.File, error *os.File) Runner {
 	return Application{
 		context:  ctx,

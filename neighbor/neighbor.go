@@ -61,7 +61,8 @@ func FindNearest(subject string, options []string, limit int) Neighbors {
 		for _, name := range mapping[rank.Target] {
 			buffer = append(
 				buffer,
-				&Neighbor{name, rank.Distance})
+				&Neighbor{name, rank.Distance},
+			)
 		}
 	}
 
