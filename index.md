@@ -31,3 +31,8 @@ For builds from source, please refer to
 <img alt="Darwin" src=https://simpleicons.org/icons/apple.svg width=20 />
 <img alt="FreeBSD" src=https://simpleicons.org/icons/freebsd.svg width=20 />
 and more.
+
+<!---
+This tag is used to identify the package for go get
+--->
+<meta name="go-import" content="janmarten.name/env git https://github.com/johmanx10/env">
