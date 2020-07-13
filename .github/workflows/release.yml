@@ -54,6 +54,7 @@ jobs:
       - name: Build linux/${{ matrix.GOARCH }}
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
+          VERSION="${VERSION##v}"
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
           BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
 
