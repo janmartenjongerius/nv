@@ -45,6 +45,7 @@ jobs:
         run: |
           git fetch origin --tags
           VERSION="$(git describe "${{ github.ref }}" --tags --always | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
+          VERSION="${VERSION##v}"
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
           BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
 
