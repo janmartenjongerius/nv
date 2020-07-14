@@ -1,22 +1,21 @@
 /*
 Package text implements an encoder and decoder for a text based representation of config.Variable.
 
-Example:
-	Input:
-		[]*config.Variable{
-			&config.Variable{
-				Key: "HOME",
-				Value: "C:\Users\Gopher",
-			},
-			&config.Variable{
-				Key: "USERNAME",
-				Value: "GOPHER",
-			},
-		}
+For the following input:
+	[]*config.Variable{
+		&config.Variable{
+			Key: "HOME",
+			Value: "C:\Users\Gopher",
+		},
+		&config.Variable{
+			Key: "USERNAME",
+			Value: "GOPHER",
+		},
+	}
 
-	Output:
-		HOME=C:\Users\Gopher
-		USERNAME=Gopher
+The encoder will output:
+	HOME=C:\Users\Gopher
+	USERNAME=Gopher
  */
 package text
 
