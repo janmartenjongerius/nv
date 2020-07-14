@@ -1,7 +1,7 @@
 /*
 TODO:
 	> Write documentation
- */
+*/
 package main
 
 import (

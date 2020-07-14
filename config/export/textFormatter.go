@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const FormatText  = "text"
+const FormatText = "text"
 
 type TextFormatter struct {
 	Formatter
@@ -29,6 +29,6 @@ func (formatter TextFormatter) FormatList(variables []*config.Variable) (string,
 	return strings.Join(result, "\n"), nil
 }
 
-func init () {
+func init() {
 	RegisterFormatter(FormatText, TextFormatter{})
 }

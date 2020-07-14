@@ -9,15 +9,15 @@ import (
 )
 
 const (
-	FormatJson = "json"
+	FormatJson       = "json"
 	FormatJsonPretty = "json:pretty"
 )
 
 type JsonFormatter struct {
 	Formatter
-	indent string
+	indent     string
 	indentSize uint8
-	prefix string
+	prefix     string
 }
 
 func (formatter JsonFormatter) Format(variable *config.Variable) (string, error) {
@@ -53,7 +53,7 @@ func (formatter JsonFormatter) FormatList(variables []*config.Variable) (string,
 	return string(marshalled), e
 }
 
-func init () {
+func init() {
 	RegisterFormatter(FormatJson, JsonFormatter{})
 	RegisterFormatter(FormatJsonPretty, JsonFormatter{indent: "\t", indentSize: 1})
 }

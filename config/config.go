@@ -1,7 +1,7 @@
 /*
 TODO:
 	> Write unit tests
- */
+*/
 
 package config
 

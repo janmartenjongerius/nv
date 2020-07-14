@@ -11,8 +11,8 @@ import (
 
 type getCommand struct {
 	BaseCommand
-	engine search.Engine
-	output string
+	engine        search.Engine
+	output        string
 	exportFactory export.Factory
 }
 
@@ -57,11 +57,11 @@ func NewGetCommand(engine search.Engine, exportFactory export.Factory) Command {
 	flags := flag.NewFlagSet("get", flag.ContinueOnError)
 	cmd := &getCommand{
 		BaseCommand: BaseCommand{
-			flags: flags,
+			flags:       flags,
 			description: "Get the value of the requested environment variables.",
 		},
-		engine: engine,
-		output: "text",
+		engine:        engine,
+		output:        "text",
 		exportFactory: exportFactory,
 	}
 

@@ -9,7 +9,7 @@ TODO:
 
 Final notes:
 	This package DOES NOT hold a stable public API and is meant for internal purposes only.
- */
+*/
 package command
 
 import (
@@ -194,14 +194,14 @@ func ExtractCommandArgs(input []string) (cmd string, args []string) {
 func NewApplication(ctx context.Context, input *os.File, output *os.File, error *os.File) *Application {
 	return &Application{
 		descriptor: descriptor{
-			name: os.Args[0],
+			name:        os.Args[0],
 			description: "",
 		},
-		context:    ctx,
-		input:      bufio.NewReader(input),
-		output:     output,
-		error:      error,
-		commands:   make(Commands),
+		context:  ctx,
+		input:    bufio.NewReader(input),
+		output:   output,
+		error:    error,
+		commands: make(Commands),
 	}
 }
 
