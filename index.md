@@ -20,7 +20,7 @@ Current version: [![Stable version](https://img.shields.io/github/v/release/johm
 | Package                       | Download |
 |:------------------------------|:---------|
 | Env      | [![DEB 32 Bit](https://img.shields.io/badge/-32--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_amd64.deb) |
-| Plugins  | [![DEB 32 Bit](https://img.shields.io/badge/-32--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_amd64.deb) |
+| Plugins  | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_amd64.deb) |
 
 > The application is installed in `/usr/local/bin/env` so as not to conflict with `/usr/bin/env`.
 

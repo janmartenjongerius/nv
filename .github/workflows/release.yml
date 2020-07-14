@@ -76,29 +76,31 @@ jobs:
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
 
           # Build plugins
-          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
-          BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
+          if [[ "$GOARCH" == "amd64" ]]; then
+            BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
+            BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
 
-          mkdir -p "$BUILD_DIR"
-          mkdir -p "$BUILD_PLUGINS"
-          cat <<CONFIG > "$BUILD_DIR/control"
-          Package: env-plugins
-          Version: $VERSION
-          Architecture: ${{ matrix.GOARCH }}
-          Essential: no
-          Priority: optional
-          Maintainer: Jan-Marten de Boer
-          Description: Environment lookup plugins
-          CONFIG
+            mkdir -p "$BUILD_DIR"
+            mkdir -p "$BUILD_PLUGINS"
+            cat <<CONFIG > "$BUILD_DIR/control"
+            Package: env-plugins
+            Version: $VERSION
+            Architecture: ${{ matrix.GOARCH }}
+            Essential: no
+            Priority: optional
+            Maintainer: Jan-Marten de Boer
+            Description: Environment lookup plugins
+            CONFIG
 
-          for plugin in plugins/*/plugin.go; do
-            go build \
-              -buildmode plugin \
-              -o "$BUILD_PLUGINS/$(basename ${plugin%%.go}).so" \
-              $plugin;
-          done
+            for plugin in plugins/*/plugin.go; do
+              go build \
+                -buildmode plugin \
+                -o "$BUILD_PLUGINS/$(basename ${plugin%%.go}).so" \
+                $plugin;
+            done
 
-          dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+            dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+          fi
 
           echo "::set-env name=VERSION::$VERSION"
       - name: Upload linux/${{ matrix.GOARCH }} application DEB
@@ -114,6 +116,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ matrix.GOARCH == 'amd64' }}
         with:
           upload_url: ${{ needs.draft.outputs.upload_url }}
           asset_path: ./env_${{ env.VERSION }}_${{ matrix.GOARCH }}_plugins.deb
