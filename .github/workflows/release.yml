@@ -55,6 +55,8 @@ jobs:
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
           VERSION="${VERSION##v}"
+
+          # Build application
           BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
           BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
 
@@ -72,8 +74,34 @@ jobs:
           CONFIG
 
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+
+          # Build plugins
+          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
+          BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
+
+          mkdir -p "$BUILD_DIR"
+          mkdir -p "$BUILD_PLUGINS"
+          cat <<CONFIG > "$BUILD_DIR/control"
+          Package: env-plugins
+          Version: $VERSION
+          Architecture: ${{ matrix.GOARCH }}
+          Essential: no
+          Priority: optional
+          Maintainer: Jan-Marten de Boer
+          Description: Environment lookup plugins
+          CONFIG
+
+          for plugin in plugins/*/plugin.go; do
+            go build \
+              -buildmode plugin \
+              -o "$BUILD_PLUGINS/$(basename ${plugin%%.go}).so" \
+              $plugin;
+          done
+
+          dpkg-deb --build "$(dirname "$BUILD_DIR")/"
+
           echo "::set-env name=VERSION::$VERSION"
-      - name: Upload linux/${{ matrix.GOARCH }} asset
+      - name: Upload linux/${{ matrix.GOARCH }} application DEB
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -81,6 +109,15 @@ jobs:
           upload_url: ${{ needs.draft.outputs.upload_url }}
           asset_path: ./env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
           asset_name: env_${{ matrix.GOARCH }}.deb
+          asset_content_type: application/vnd.debian.binary-package
+      - name: Upload linux/${{ matrix.GOARCH }} plugins DEB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.draft.outputs.upload_url }}
+          asset_path: ./env_${{ env.VERSION }}_${{ matrix.GOARCH }}_plugins.deb
+          asset_name: plugins_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
 
   community-update:

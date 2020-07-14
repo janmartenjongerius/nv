@@ -11,15 +11,30 @@ cross platform.
 - Export a list of required environment variables to a DotEnv file.
 - Set, update and unset environment variables programmatically.
 
-# Pre-built installations
+# Download
 
-| Platform                                                                                                 | Downloads |
-|:---------------------------------------------------------------------------------------------------------|:----------|
-| <img alt="Debian linux" src=https://simpleicons.org/icons/debian.svg width=20 /> Debian linux            | [![DEB 32 Bit](https://img.shields.io/badge/dynamic/json.svg?label=32%20Bit&url=https://api.github.com/repos/johmanx10/env/releases/latest&query=$.tag_name&logo=debian&color=c60036&logoColor=white)](https://github.com/johmanx10/env/releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/dynamic/json.svg?label=64%20Bit&url=https://api.github.com/repos/johmanx10/env/releases/latest&query=$.tag_name&logo=debian&color=c60036&logoColor=white)](https://github.com/johmanx10/env/releases/latest/download/env_amd64.deb) |
-| <img alt="Redhat linux" src=https://simpleicons.org/icons/redhat.svg width=20 /> Redhat linux            | Coming soon |
-| <img alt="Microsoft Windows" src=https://simpleicons.org/icons/windows.svg width=20 /> Microsoft Windows | Coming soon |
+Current version: [![Stable version](https://img.shields.io/github/v/release/johmanx10/env?include_prereleases&label=)](https://github.com/johmanx10/env/releases/latest)
 
-# Install from source
+## <img alt="Debian linux" src=https://simpleicons.org/icons/debian.svg width=20 /> Debian linux 
+
+| Package                       | Download |
+|:------------------------------|:---------|
+| Env      | [![DEB 32 Bit](https://img.shields.io/badge/-32--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_amd64.deb) |
+| Plugins  | [![DEB 32 Bit](https://img.shields.io/badge/-32--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_amd64.deb) |
+
+> The application is installed in `/usr/local/bin/env` so as not to conflict with `/usr/bin/env`.
+
+> Plugins are installed in `/usr/local/lib/env`.
+
+## <img alt="Redhat linux" src=https://simpleicons.org/icons/redhat.svg width=20 /> Redhat linux
+
+Coming soon
+
+## <img alt="Microsoft Windows" src=https://simpleicons.org/icons/windows.svg width=20 /> Microsoft Windows
+
+Coming soon
+
+## <img alt="Golang" src=https://simpleicons.org/icons/go.svg width=20 /> Install from source
 
 [![Source](https://img.shields.io/badge/dynamic/json.svg?label=Source&url=https://api.github.com/repos/johmanx10/env&query=$.default_branch&logo=go&color=00acd7&logoColor=7fd5ea)](https://github.com/johmanx10/env/archive/main.zip)
 

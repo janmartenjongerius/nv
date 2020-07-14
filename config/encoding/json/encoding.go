@@ -9,13 +9,13 @@ For the following input:
 		},
 		&config.Variable{
 			Key: "USERNAME",
-			Value: "GOPHER",
+			Value: "Gopher",
 		},
 	}
 
 The encoder will output:
-	{"HOME":"C:\\Users\\Gopher","USERNAME":"GOPHER"}
- */
+	{"HOME":"C:\\Users\\Gopher","USERNAME":"Gopher"}
+*/
 package json
 
 import (

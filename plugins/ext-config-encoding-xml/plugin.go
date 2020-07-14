@@ -1,5 +1,5 @@
 /*
-Package text implements an encoder and decoder for a text based representation of config.Variable.
+Package main implements an encoder and decoder for an XML representation of config.Variable.
 
 For the following input:
 	[]*config.Variable{
@@ -14,16 +14,14 @@ For the following input:
 	}
 
 The encoder will output:
-	HOME=C:\Users\Gopher
-	USERNAME=Gopher
+	<Variable><Key>HOME</Key><Value>C:\Users\Gopher</Value></Variable><Variable><Key>USERNAME</Key><Value>Gopher</Value></Variable>
 */
-package text
+package main
 
 import (
-	"fmt"
+	"encoding/xml"
 	"janmarten.name/env/config"
 	"janmarten.name/env/config/encoding"
-	"strings"
 )
 
 type encoder struct {
@@ -32,13 +30,12 @@ type encoder struct {
 
 // Allows to Encode config.Variable structs into a byte sequence.
 func (e encoder) Encode(variables ...*config.Variable) ([]byte, error) {
-	result := make([]string, len(variables))
+	return xml.Marshal(variables)
+}
 
-	for i, v := range variables {
-		result[i] = fmt.Sprintf("%s=%s", v.Key, v.Value)
-	}
-
-	return []byte(strings.Join(result, "\n")), nil
+type buffer []struct {
+	Key   string
+	Value string
 }
 
 type decoder struct {
@@ -47,31 +44,26 @@ type decoder struct {
 
 // Allows to Decode a byte sequence into a list of config.Variable structs.
 func (d decoder) Decode(payload []byte) ([]*config.Variable, error) {
-	variables := make([]*config.Variable, 0)
+	var e error
 
-	for _, line := range strings.Split(string(payload), "\n") {
-		if len(line) == 0 {
-			continue
+	vars := make(buffer, 0)
+	result := make([]*config.Variable, 0)
+
+	if e = xml.Unmarshal(payload, &vars); e != nil {
+		for _, v := range vars {
+			result = append(result, &config.Variable{
+				Key:   v.Key,
+				Value: v.Value,
+			})
 		}
-
-		components := strings.SplitN(line, "=", 2)
-
-		if len(components) != 2 {
-			return nil, encoding.IllFormattedVariable
-		}
-
-		variables = append(variables, &config.Variable{
-			Key:   components[0],
-			Value: components[1],
-		})
 	}
 
-	return variables, nil
+	return result, e
 }
 
 func init() {
 	encoding.Register(
-		"text",
+		"xml",
 		struct {
 			encoder
 			decoder
