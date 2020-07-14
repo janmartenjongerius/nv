@@ -1,9 +1,9 @@
-/**
+/*
 TODO:
 	> Write unit tests
 	> Document symbols
 	> Create YAML formatter as plugin (.so)
-*/
+ */
 package export
 
 import (
@@ -22,6 +22,12 @@ type Exporter interface {
 	ExportList(variables []*config.Variable) error
 }
 
+/*
+TODO:
+	> Rename Formatter -> Encoding and put in new package: env/config/encoding
+	> Create YAML encoding as plugin (.so)
+	> Create ASCII encoding as plugin (.so)
+ */
 type Formatter interface {
 	Format(variable *config.Variable) (string, error)
 	FormatList(variables []*config.Variable) (string, error)
