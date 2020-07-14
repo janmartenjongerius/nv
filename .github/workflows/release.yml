@@ -76,22 +76,22 @@ jobs:
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
 
           # Build plugins
+          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
+          BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
+
+          mkdir -p "$BUILD_DIR"
+          mkdir -p "$BUILD_PLUGINS"
+          cat <<CONFIG > "$BUILD_DIR/control"
+          Package: env-plugins
+          Version: $VERSION
+          Architecture: ${{ matrix.GOARCH }}
+          Essential: no
+          Priority: optional
+          Maintainer: Jan-Marten de Boer
+          Description: Environment lookup plugins
+          CONFIG
+
           if [[ "$GOARCH" == "amd64" ]]; then
-            BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
-            BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
-
-            mkdir -p "$BUILD_DIR"
-            mkdir -p "$BUILD_PLUGINS"
-            cat <<CONFIG > "$BUILD_DIR/control"
-            Package: env-plugins
-            Version: $VERSION
-            Architecture: ${{ matrix.GOARCH }}
-            Essential: no
-            Priority: optional
-            Maintainer: Jan-Marten de Boer
-            Description: Environment lookup plugins
-            CONFIG
-
             for plugin in plugins/*/plugin.go; do
               go build \
                 -buildmode plugin \
