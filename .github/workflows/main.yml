@@ -23,6 +23,17 @@ jobs:
           file: ./coverage.txt
           fail_ci_if_error: true
 
+  reportcard:
+    runs-on: ubuntu-latest
+    name: Check report card
+    steps:
+      - name: Trigger report card check
+        run: |
+          wget \
+            --post-data "repo=github.com/${{ github.repository }}" \
+            https://goreportcard.com/checks \
+            -O -;
+
   build-deb:
     runs-on: ubuntu-latest
     strategy:

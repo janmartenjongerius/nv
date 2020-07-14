@@ -83,3 +83,14 @@ jobs:
           asset_name: env_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
 
+  community-update:
+    name: Update community resoures
+    runs-on: ubuntu-latest
+    needs: [build-deb]
+    steps:
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - name: Trigger community cache flush
+        run: go get "janmarten.name/env@$(basename "/${{ github.ref }}")"
