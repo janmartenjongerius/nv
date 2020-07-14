@@ -137,7 +137,7 @@ func (engine searchEngine) suggestions(request *Request) []string {
 func (engine searchEngine) targetKeys() []string {
 	keys := make([]string, 0)
 
-	for k, _ := range engine.targets {
+	for k := range engine.targets {
 		keys = append(keys, k)
 	}
 

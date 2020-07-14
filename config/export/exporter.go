@@ -77,7 +77,7 @@ func RegisterFormatter(format string, formatter Formatter) {
 func GetFormats() []string {
 	keys := make([]string, 0)
 
-	for k, _ := range formatters {
+	for k := range formatters {
 		keys = append(keys, k)
 	}
 
