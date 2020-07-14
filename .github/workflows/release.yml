@@ -95,4 +95,4 @@ jobs:
       - name: Trigger community cache flush
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
-          go get "janmarten.name/env@$VERSION"
+          GO111MODULE=on go get "janmarten.name/env@$VERSION"
