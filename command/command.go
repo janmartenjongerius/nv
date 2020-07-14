@@ -41,7 +41,7 @@ func (d Describers) Len() int {
 }
 
 func (d Describers) Less(i, j int) bool {
-	return d[1].Name() < d[j].Name()
+	return d[i].Name() < d[j].Name()
 }
 
 func (d Describers) Swap(i, j int) {
