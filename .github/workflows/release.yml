@@ -93,4 +93,6 @@ jobs:
         with:
           go-version: '1.14'
       - name: Trigger community cache flush
-        run: go get "janmarten.name/env@$(basename "/${{ github.ref }}")"
+        run: |
+          VERSION="$(basename "/${{ github.ref }}")"
+          go get "janmarten.name/env@$VERSION"
