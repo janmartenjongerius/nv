@@ -8,6 +8,8 @@ import (
 	"context"
 	"janmarten.name/env/command"
 	"janmarten.name/env/config"
+	_ "janmarten.name/env/config/encoding/json"
+	_ "janmarten.name/env/config/encoding/text"
 	"janmarten.name/env/config/export"
 	"janmarten.name/env/search"
 	"os"

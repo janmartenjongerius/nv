@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"janmarten.name/env/config"
+	"janmarten.name/env/config/encoding"
 	"janmarten.name/env/config/export"
 	"janmarten.name/env/search"
 	"strings"
@@ -69,7 +70,7 @@ func NewGetCommand(engine search.Engine, exportFactory export.Factory) Command {
 		&cmd.output,
 		"output",
 		cmd.output,
-		fmt.Sprintf("The format to use for output. Can be: %v", strings.Join(export.GetFormats(), ", ")),
+		fmt.Sprintf("The format to use for output. Can be: %v", strings.Join(encoding.GetEncodings(), ", ")),
 	)
 
 	return cmd

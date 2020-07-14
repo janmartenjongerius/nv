@@ -2,40 +2,23 @@
 TODO:
 	> Write unit tests
 	> Document symbols
-	> Create YAML formatter as plugin (.so)
- */
+*/
 package export
 
 import (
-	"errors"
 	"io"
 	"janmarten.name/env/config"
-	"sort"
+	"janmarten.name/env/config/encoding"
 )
-
-const UnknownFormatterError = "unknown format requested"
-
-var formatters = make(map[string]Formatter)
 
 type Exporter interface {
 	Export(variable *config.Variable) error
 	ExportList(variables []*config.Variable) error
 }
 
-/*
-TODO:
-	> Rename Formatter -> Encoding and put in new package: env/config/encoding
-	> Create YAML encoding as plugin (.so)
-	> Create ASCII encoding as plugin (.so)
- */
-type Formatter interface {
-	Format(variable *config.Variable) (string, error)
-	FormatList(variables []*config.Variable) (string, error)
-}
-
 type fileExporter struct {
-	output    io.Writer
-	formatter Formatter
+	output  io.Writer
+	encoder encoding.Encoder
 }
 
 func (exporter fileExporter) write(payload string) error {
@@ -48,26 +31,29 @@ func (exporter fileExporter) write(payload string) error {
 
 func (exporter fileExporter) Export(variable *config.Variable) error {
 	var (
-		result string
+		result []byte
 		e      error
 	)
 
-	if result, e = exporter.formatter.Format(variable); e != nil {
+	if result, e = exporter.encoder.Encode(variable); e != nil {
 		return e
 	}
 
-	return exporter.write(result + "\n")
+	return exporter.write(string(result) + "\n")
 }
 
 func (exporter fileExporter) ExportList(variables []*config.Variable) error {
 	var (
-		result string
-		e      error
+		encoded []byte
+		result  string
+		e       error
 	)
 
-	if result, e = exporter.formatter.FormatList(variables); e != nil {
+	if encoded, e = exporter.encoder.Encode(variables...); e != nil {
 		return e
 	}
+
+	result = string(encoded)
 
 	if len(result) > 0 {
 		result += "\n"
@@ -76,33 +62,17 @@ func (exporter fileExporter) ExportList(variables []*config.Variable) error {
 	return exporter.write(result)
 }
 
-func RegisterFormatter(format string, formatter Formatter) {
-	formatters[format] = formatter
-}
-
-func GetFormats() []string {
-	keys := make([]string, 0)
-
-	for k := range formatters {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	return keys
-}
-
 func New(format string, writer io.Writer) (Exporter, error) {
 	var (
-		formatter Formatter
-		ok        bool
+		encoder encoding.Encoder
+		e       error
 	)
 
-	if formatter, ok = formatters[format]; ok == false {
-		return nil, errors.New(UnknownFormatterError)
+	if encoder, e = encoding.New(format); e != nil {
+		return nil, e
 	}
 
-	return fileExporter{writer, formatter}, nil
+	return fileExporter{writer, encoder}, nil
 }
 
 type Factory func(format string) (Exporter, error)
