@@ -6,6 +6,7 @@ To easily debug the local environment or export it, a chain of commands specific
 However, env wants to solve this in a modern way, cross platform.
 
 Features
+
 	* Get an environment variable, ensuring the environment variable exists.
 	* Search for environment variables, interactively and programmatically.
 	* Export a list of required environment variables to a DotEnv file.
@@ -30,7 +31,13 @@ import (
 
 var (
 	// PluginLocations tells the application where to look for plugin files.
-	PluginLocations = []string{"/usr/local/lib/env"}
+	PluginLocations = map[string]map[string][]string{
+		"linux": {
+			"amd64": {
+				"/usr/local/lib/env",
+			},
+		},
+	}
 
 	// PluginExtensions tells the plugin loader which extensions to match while loading plugins.
 	PluginExtensions = []string{".so"}
@@ -53,7 +60,7 @@ var (
 )
 
 func init() {
-	for _, location := range PluginLocations {
+	for _, location := range PluginLocations[runtime.GOOS][runtime.GOARCH] {
 		_ = filepath.Walk(location, pluginLoader)
 	}
 }
