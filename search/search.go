@@ -1,31 +1,21 @@
-/*
-TODO:
-	> Write unit tests
-	> Document symbols
-	> Convert type of Request.Suggestions:
-		> uint -> uint8
-			255 suggestions is enough
-	> Add additional commands to manage environment variables
-		> set
-		> unset
-		> export
-		> import
-	> Rename KeyParallel -> CtxParallel
-*/
 package search
 
 import (
 	"context"
+	"janmarten.name/env/config"
 	"janmarten.name/env/neighbor"
 )
 
 type requestChan chan *Request
 type responseChan chan *Response
 
-const KeyParallel contextKey = "parallel"
+// Context key defining the number of parallel queries.
+const CtxParallel contextKey = "parallel"
+
+type contextKey string
 
 type Response struct {
-	Match       *interface{}
+	Match       *config.Variable
 	Suggestions []string
 	Request     *Request
 }
@@ -45,15 +35,13 @@ type Engine interface {
 type searchEngine struct {
 	Engine
 	ctx       context.Context
-	targets   map[string]*interface{}
+	targets   map[string]*config.Variable
 	requests  requestChan
 	responses responseChan
 }
 
-type contextKey string
-
-func New(ctx context.Context, targets map[string]*interface{}) Engine {
-	numParallel, ok := ctx.Value(KeyParallel).(uint)
+func New(ctx context.Context, targets config.Variables) Engine {
+	numParallel, ok := ctx.Value(CtxParallel).(uint)
 
 	if ok == false || numParallel < 1 {
 		numParallel = 1
@@ -61,7 +49,15 @@ func New(ctx context.Context, targets map[string]*interface{}) Engine {
 
 	engine := &searchEngine{
 		ctx:       ctx,
-		targets:   targets,
+		targets:   func(targets config.Variables) map[string]*config.Variable {
+			res := make(map[string]*config.Variable)
+
+			for _, t := range targets {
+				res[t.Key] = t
+			}
+
+			return res
+		}(targets),
 		requests:  make(requestChan, numParallel),
 		responses: make(responseChan, numParallel),
 	}

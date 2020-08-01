@@ -1,24 +1,17 @@
-/*
-TODO:
-	> Write unit tests
-	> Document symbols
-*/
-package export
+package config
 
 import (
 	"io"
-	"janmarten.name/env/config"
-	"janmarten.name/env/config/encoding"
 )
 
 type Exporter interface {
-	Export(variable *config.Variable) error
-	ExportList(variables []*config.Variable) error
+	Export(variable *Variable) error
+	ExportList(variables []*Variable) error
 }
 
 type fileExporter struct {
 	output  io.Writer
-	encoder encoding.Encoder
+	encoder Encoder
 }
 
 func (exporter fileExporter) write(payload string) error {
@@ -29,7 +22,7 @@ func (exporter fileExporter) write(payload string) error {
 	return nil
 }
 
-func (exporter fileExporter) Export(variable *config.Variable) error {
+func (exporter fileExporter) Export(variable *Variable) error {
 	var (
 		result []byte
 		e      error
@@ -42,7 +35,7 @@ func (exporter fileExporter) Export(variable *config.Variable) error {
 	return exporter.write(string(result) + "\n")
 }
 
-func (exporter fileExporter) ExportList(variables []*config.Variable) error {
+func (exporter fileExporter) ExportList(variables []*Variable) error {
 	var (
 		encoded []byte
 		result  string
@@ -62,23 +55,23 @@ func (exporter fileExporter) ExportList(variables []*config.Variable) error {
 	return exporter.write(result)
 }
 
-func New(format string, writer io.Writer) (Exporter, error) {
+func NewExporter(format string, writer io.Writer) (Exporter, error) {
 	var (
-		encoder encoding.Encoder
+		encoder Encoder
 		e       error
 	)
 
-	if encoder, e = encoding.New(format); e != nil {
+	if encoder, e = NewEncoding(format); e != nil {
 		return nil, e
 	}
 
 	return fileExporter{writer, encoder}, nil
 }
 
-type Factory func(format string) (Exporter, error)
+type ExporterFactory func(format string) (Exporter, error)
 
-func NewFactory(writer io.Writer) Factory {
+func NewExporterFactory(writer io.Writer) ExporterFactory {
 	return func(format string) (Exporter, error) {
-		return New(format, writer)
+		return NewExporter(format, writer)
 	}
 }

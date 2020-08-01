@@ -1,8 +1,10 @@
+// +build !windows
+
 /*
-Package main implements an encoder and decoder for an XML representation of config.Variable.
+Package main implements an config.Encoder and config.Decoder for an XML representation of config.Variable.
 
 For the following input:
-	[]*config.Variable{
+	config.Variables{
 		&config.Variable{
 			Key: "HOME",
 			Value: "C:\Users\Gopher",
@@ -13,7 +15,7 @@ For the following input:
 		},
 	}
 
-The encoder will output:
+The config.Encoder will output:
 	<Variable><Key>HOME</Key><Value>C:\Users\Gopher</Value></Variable><Variable><Key>USERNAME</Key><Value>Gopher</Value></Variable>
 */
 package main
@@ -21,52 +23,35 @@ package main
 import (
 	"encoding/xml"
 	"janmarten.name/env/config"
-	"janmarten.name/env/config/encoding"
 )
 
-type encoder struct {
-	encoding.Encoder
+type xmlEncoder struct {
+	config.Encoder
 }
 
 // Allows to Encode config.Variable structs into a byte sequence.
-func (e encoder) Encode(variables ...*config.Variable) ([]byte, error) {
+func (e xmlEncoder) Encode(variables ...*config.Variable) ([]byte, error) {
 	return xml.Marshal(variables)
 }
 
-type buffer []struct {
-	Key   string
-	Value string
+type xmlDecoder struct {
+	config.Decoder
 }
 
-type decoder struct {
-	encoding.Decoder
-}
-
-// Allows to Decode a byte sequence into a list of config.Variable structs.
-func (d decoder) Decode(payload []byte) ([]*config.Variable, error) {
-	var e error
-
-	vars := make(buffer, 0)
+// Allows to Decode a byte sequence into a list of config.Variables.
+func (d xmlDecoder) Decode(payload []byte) (config.Variables, error) {
 	result := make([]*config.Variable, 0)
-
-	if e = xml.Unmarshal(payload, &vars); e != nil {
-		for _, v := range vars {
-			result = append(result, &config.Variable{
-				Key:   v.Key,
-				Value: v.Value,
-			})
-		}
-	}
+	e := xml.Unmarshal(payload, &result)
 
 	return result, e
 }
 
 func init() {
-	encoding.Register(
+	config.RegisterEncoding(
 		"xml",
 		struct {
-			encoder
-			decoder
+			xmlEncoder
+			xmlDecoder
 		}{},
 	)
 }

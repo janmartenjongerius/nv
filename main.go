@@ -1,5 +1,5 @@
 /*
-Env
+Nv
 
 More than ever, modern development relies on environment variables.
 To easily debug the local environment or export it, a chain of commands specific to your operating system would do.
@@ -16,11 +16,9 @@ package main
 
 import (
 	"context"
-	"janmarten.name/env/command"
+	"fmt"
+
 	"janmarten.name/env/config"
-	_ "janmarten.name/env/config/encoding/json"
-	_ "janmarten.name/env/config/encoding/text"
-	"janmarten.name/env/config/export"
 	"janmarten.name/env/search"
 	"os"
 	"path/filepath"
@@ -34,7 +32,8 @@ var (
 	PluginLocations = map[string]map[string][]string{
 		"linux": {
 			"amd64": {
-				"/usr/local/lib/env",
+				"/usr/local/lib/nv",
+				"/usr/lib/nv",
 			},
 		},
 	}
@@ -66,23 +65,16 @@ func init() {
 }
 
 func main() {
-	cfg := config.Parse(os.Environ(), "=")
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
-	ctx = context.WithValue(ctx, search.KeyParallel, runtime.GOMAXPROCS(0))
+	ctx = context.WithValue(ctx, search.CtxParallel, runtime.GOMAXPROCS(0) * 5)
 	defer cancel()
 
-	exportFactory := export.NewFactory(os.Stdout)
-	engine := search.New(ctx, cfg.MapInterfaces())
+	//exportFactory := export.NewFactory(os.Stdout)
+	engine := search.New(ctx, config.Environment)
 
-	app := command.NewApplication(ctx, os.Stdin, os.Stdout, os.Stderr)
-	app.SetDescription("Look up and manage environment variables.")
-	app.Register(command.NewGetCommand(engine, exportFactory))
-	app.Register(command.NewSearchCommand(engine))
+	//fmt.Printf("Engine: %#v", engine)
+	fmt.Printf("Result: %q\n", engine.Query("HOME", uint(3)).Result())
 
-	os.Exit(
-		app.Run(
-			command.ExtractCommandArgs(os.Args[1:]),
-		),
-	)
+	os.Exit(0)
 }

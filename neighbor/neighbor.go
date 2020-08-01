@@ -1,7 +1,3 @@
-/*
-TODO:
-	> Write unit tests
-*/
 package neighbor
 
 import (
