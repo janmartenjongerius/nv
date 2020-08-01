@@ -1,18 +1,16 @@
 # Introduction
 
-Env is an alternative lookup tool for Environment Variables.
+Nv is an alternative lookup tool for Environment Variables.
 It can be used to:
 
 - Get an environment variable, ensuring the environment variable exists.
 - Search for environment variables, interactively and programmatically.
 - Export a list of required environment variables to a DotEnv file.
 
-Env is written in
-Go and builds
-into a native binary.
+Nv is written in Go and builds into a native binary.
 
-See the [user documentation](http://janmarten.name/nv) for more information and pre-built downloads.
-Use the [code documentation](https://pkg.go.dev/janmarten.name/nv) for specifics about code symbols.
+* See the [user documentation](http://janmarten.name/nv) for more information and pre-built downloads.
+* Use the [code documentation](https://pkg.go.dev/janmarten.name/nv) for specifics about code symbols.
 
 # Installation
 
