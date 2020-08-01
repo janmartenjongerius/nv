@@ -1,5 +1,5 @@
 /*
-Package json implements an Encoder and Decoder for a JSON representation of Variable.
+Package config implements an Encoder and Decoder for a JSON representation of Variable.
 
 For the following input:
 	Variables{

@@ -1,5 +1,5 @@
 /*
-Package encoding provides interfaces for configuration encoders and decoders.
+Package config provides interfaces for configuration encoders and decoders.
 
 Additional encoders can be added through the RegisterEncoding function.
 This allows for separation of concerns internally, but also for plugins to implement their own encoding.

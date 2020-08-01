@@ -1,5 +1,5 @@
 /*
-Package text implements an Encoder and Decoder for a text based representation of Variable.
+Package config implements an Encoder and Decoder for a text based representation of Variable.
 
 For the following input:
 	Variables{
