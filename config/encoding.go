@@ -26,7 +26,7 @@ var (
 )
 
 // Callback for when an Encoding has become available.
-type EncodingCallback func (enc Encoding)
+type EncodingCallback func(enc Encoding)
 
 // Allows to Encode config.Variable structs into a byte sequence.
 type Encoder interface {
@@ -64,7 +64,7 @@ func processEncodingCallbacks(name string) {
 		return
 	}
 
-	defer func (Callbacks []EncodingCallback) {
+	defer func(Callbacks []EncodingCallback) {
 		for _, Callback := range Callbacks {
 			Callback(enc)
 		}

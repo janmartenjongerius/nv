@@ -18,7 +18,7 @@ type Variables []*Variable
 
 // Initialize the environment variables.
 func init() {
-	defer WithEncoding("text", func (enc Encoding) {
+	defer WithEncoding("text", func(enc Encoding) {
 		for _, line := range os.Environ() {
 			vars, _ := enc.Decode([]byte(line))
 			Environment = append(Environment, vars...)

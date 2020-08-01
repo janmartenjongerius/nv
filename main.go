@@ -67,7 +67,7 @@ func init() {
 func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
-	ctx = context.WithValue(ctx, search.CtxParallel, runtime.GOMAXPROCS(0) * 5)
+	ctx = context.WithValue(ctx, search.CtxParallel, runtime.GOMAXPROCS(0)*5)
 	defer cancel()
 
 	//exportFactory := export.NewFactory(os.Stdout)
