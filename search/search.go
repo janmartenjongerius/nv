@@ -2,8 +2,8 @@ package search
 
 import (
 	"context"
-	"janmarten.name/env/config"
-	"janmarten.name/env/neighbor"
+	"janmarten.name/nv/config"
+	"janmarten.name/nv/neighbor"
 )
 
 type requestChan chan *Request

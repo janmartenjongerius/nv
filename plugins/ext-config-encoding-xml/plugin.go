@@ -22,7 +22,7 @@ package main
 
 import (
 	"encoding/xml"
-	"janmarten.name/env/config"
+	"janmarten.name/nv/config"
 )
 
 type xmlEncoder struct {

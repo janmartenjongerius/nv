@@ -57,14 +57,14 @@ jobs:
           VERSION="${VERSION##v}"
 
           # Build application
-          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
-          BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
+          BUILD_DIR="nv_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
+          BUILD_BIN="${BUILD_DIR}/../usr/bin"
 
           mkdir -p "$BUILD_DIR"
           mkdir -p "$BUILD_BIN"
-          go build -v -o "$BUILD_BIN/env"
+          go build -v -o "$BUILD_BIN/nv"
           cat <<CONFIG > "$BUILD_DIR/control"
-          Package: env
+          Package: nv
           Version: $VERSION
           Architecture: ${{ matrix.GOARCH }}
           Essential: no
@@ -76,13 +76,13 @@ jobs:
           dpkg-deb --build "$(dirname "$BUILD_DIR")/"
 
           # Build plugins
-          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
-          BUILD_PLUGINS="${BUILD_DIR}/../usr/local/lib/env"
+          BUILD_DIR="nv_${VERSION}_${{ matrix.GOARCH }}_plugins/DEBIAN"
+          BUILD_PLUGINS="${BUILD_DIR}/../usr/lib/nv"
 
           mkdir -p "$BUILD_DIR"
           mkdir -p "$BUILD_PLUGINS"
           cat <<CONFIG > "$BUILD_DIR/control"
-          Package: env-plugins
+          Package: nv-plugins
           Version: $VERSION
           Architecture: ${{ matrix.GOARCH }}
           Essential: no
@@ -109,8 +109,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft.outputs.upload_url }}
-          asset_path: ./env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
-          asset_name: env_${{ matrix.GOARCH }}.deb
+          asset_path: ./nv_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+          asset_name: nv_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
       - name: Upload linux/${{ matrix.GOARCH }} plugins DEB
         uses: actions/upload-release-asset@v1
@@ -119,7 +119,7 @@ jobs:
         if: ${{ matrix.GOARCH == 'amd64' }}
         with:
           upload_url: ${{ needs.draft.outputs.upload_url }}
-          asset_path: ./env_${{ env.VERSION }}_${{ matrix.GOARCH }}_plugins.deb
+          asset_path: ./nv_${{ env.VERSION }}_${{ matrix.GOARCH }}_plugins.deb
           asset_name: plugins_${{ matrix.GOARCH }}.deb
           asset_content_type: application/vnd.debian.binary-package
 
@@ -135,4 +135,4 @@ jobs:
       - name: Trigger community cache flush
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
-          GO111MODULE=on go get "janmarten.name/env@$VERSION"
+          GO111MODULE=on go get "janmarten.name/nv@$VERSION"

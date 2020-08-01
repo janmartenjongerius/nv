@@ -1,7 +1,7 @@
 # Introduction
 
 More than ever, modern development relies on environment variables. To easily debug the local environment or export it,
-a chain of commands specific to your operating system would do. However, `env` wants to solve this in a modern way,
+a chain of commands specific to your operating system would do. However, Nv wants to solve this in a modern way,
 cross platform.
 
 # Features
@@ -13,18 +13,18 @@ cross platform.
 
 # Download
 
-Current version: [![Stable version](https://img.shields.io/github/v/release/johmanx10/env?include_prereleases&label=)](https://github.com/johmanx10/env/releases/latest)
+Current version: [![Stable version](https://img.shields.io/github/v/release/johmanx10/nv?include_prereleases&label=)](https://github.com/johmanx10/nv/releases/latest)
 
 ## <img alt="Debian linux" src=https://simpleicons.org/icons/debian.svg width=20 /> Debian linux 
 
-| Package                       | Download |
-|:------------------------------|:---------|
-| Env      | [![DEB 32 Bit](https://img.shields.io/badge/-32--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_386.deb) [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/env_amd64.deb) |
-| Plugins  | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/env/releases/latest/download/plugins_amd64.deb) |
+| Package | Download |
+|:--------|:---------|
+| Nv      | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_amd64.deb) |
+| Plugins | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/plugins_amd64.deb) |
 
-> The application is installed in `/usr/local/bin/env` so as not to conflict with `/usr/bin/env`.
+> The application is installed in `/usr/bin/nv`.
 
-> Plugins are installed in `/usr/local/lib/env`.
+> Plugins are installed in `/usr/lib/nv`.
 
 ## <img alt="Redhat linux" src=https://simpleicons.org/icons/redhat.svg width=20 /> Redhat linux
 
@@ -36,10 +36,10 @@ Coming soon
 
 ## <img alt="Golang" src=https://simpleicons.org/icons/go.svg width=20 /> Install from source
 
-[![Source](https://img.shields.io/badge/dynamic/json.svg?label=Source&url=https://api.github.com/repos/johmanx10/env&query=$.default_branch&logo=go&color=00acd7&logoColor=7fd5ea)](https://github.com/johmanx10/env/archive/main.zip)
+[![Source](https://img.shields.io/badge/dynamic/json.svg?label=Source&url=https://api.github.com/repos/johmanx10/nv&query=$.default_branch&logo=go&color=00acd7&logoColor=7fd5ea)](https://github.com/johmanx10/nv/archive/main.zip)
 
 ```
-go install janmarten.name/env
+go install janmarten.name/nv
 ```
 
 For builds from source, please refer to

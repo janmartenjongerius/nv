@@ -57,14 +57,14 @@ jobs:
           git fetch origin --tags
           VERSION="$(git describe "${{ github.ref }}" --tags --always | tail -n 1)-dev-$(basename "/${{ github.ref }}")"
           VERSION="${VERSION##v}"
-          BUILD_DIR="env_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
-          BUILD_BIN="${BUILD_DIR}/../usr/local/bin"
+          BUILD_DIR="nv_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
+          BUILD_BIN="${BUILD_DIR}/../usr/bin"
 
           mkdir -p "$BUILD_DIR"
           mkdir -p "$BUILD_BIN"
-          go build -v -o "$BUILD_BIN/env"
+          go build -v -o "$BUILD_BIN/nv"
           cat <<CONFIG > "$BUILD_DIR/control"
-          Package: env
+          Package: nv
           Version: $VERSION
           Architecture: ${{ matrix.GOARCH }}
           Essential: no
@@ -78,5 +78,5 @@ jobs:
       - name: Upload linux/${{ matrix.GOARCH }} artifact
         uses: actions/upload-artifact@v1
         with:
-          name: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
-          path: env_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+          name: nv_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb
+          path: nv_${{ env.VERSION }}_${{ matrix.GOARCH }}.deb

@@ -3,7 +3,7 @@ Nv
 
 More than ever, modern development relies on environment variables.
 To easily debug the local environment or export it, a chain of commands specific to your operating system would do.
-However, env wants to solve this in a modern way, cross platform.
+However, nv wants to solve this in a modern way, cross platform.
 
 Features
 
@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"janmarten.name/env/config"
-	"janmarten.name/env/search"
+	"janmarten.name/nv/config"
+	"janmarten.name/nv/search"
 	"os"
 	"path/filepath"
 	"plugin"

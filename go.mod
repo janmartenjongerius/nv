@@ -1,4 +1,4 @@
-module janmarten.name/env
+module janmarten.name/nv
 
 go 1.13
 
