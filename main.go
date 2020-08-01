@@ -15,11 +15,7 @@ Features
 package main
 
 import (
-	"context"
-	"fmt"
-
-	"janmarten.name/nv/config"
-	"janmarten.name/nv/search"
+	"janmarten.name/nv/cmd"
 	"os"
 	"path/filepath"
 	"plugin"
@@ -65,16 +61,8 @@ func init() {
 }
 
 func main() {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	ctx = context.WithValue(ctx, search.CtxParallel, runtime.GOMAXPROCS(0)*5)
-	defer cancel()
-
-	//exportFactory := export.NewFactory(os.Stdout)
-	engine := search.New(ctx, config.Environment)
-
-	//fmt.Printf("Engine: %#v", engine)
-	fmt.Printf("Result: %q\n", engine.Query("HOME", uint(3)).Result())
-
-	os.Exit(0)
+	if err := cmd.Execute(); err != nil {
+		// Cobra already performs error handling, so nothing much for us to do here.
+		os.Exit(1)
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"janmarten.name/nv/config"
 	"janmarten.name/nv/neighbor"
+	"runtime"
 )
 
 type requestChan chan *Request
@@ -34,10 +35,11 @@ type Engine interface {
 
 type searchEngine struct {
 	Engine
-	ctx       context.Context
-	targets   map[string]*config.Variable
-	requests  requestChan
-	responses responseChan
+	ctx        context.Context
+	targets    map[string]*config.Variable
+	requests   requestChan
+	responses  responseChan
+	processing chan bool
 }
 
 func New(ctx context.Context, targets config.Variables) Engine {
@@ -48,8 +50,8 @@ func New(ctx context.Context, targets config.Variables) Engine {
 	}
 
 	engine := &searchEngine{
-		ctx:       ctx,
-		targets:   func(targets config.Variables) map[string]*config.Variable {
+		ctx: ctx,
+		targets: func(targets config.Variables) map[string]*config.Variable {
 			res := make(map[string]*config.Variable)
 
 			for _, t := range targets {
@@ -58,8 +60,9 @@ func New(ctx context.Context, targets config.Variables) Engine {
 
 			return res
 		}(targets),
-		requests:  make(requestChan, numParallel),
-		responses: make(responseChan, numParallel),
+		requests:   make(requestChan, numParallel),
+		responses:  make(responseChan, numParallel),
+		processing: make(chan bool, numParallel),
 	}
 
 	return engine
@@ -98,6 +101,7 @@ func (engine searchEngine) processNextRequest() {
 	case <-engine.ctx.Done():
 		break
 	default:
+		engine.processing <- true
 		request := <-engine.requests
 		response := &Response{
 			Match:       engine.targets[request.Query],
@@ -105,11 +109,14 @@ func (engine searchEngine) processNextRequest() {
 			Request:     request,
 		}
 
+		defer func() {
+			<-engine.processing
+			engine.responses <- response
+		}()
+
 		if response.Match == nil && request.Suggestions > 0 {
 			response.Suggestions = append(response.Suggestions, engine.suggestions(request)...)
 		}
-
-		engine.responses <- response
 	}
 }
 
@@ -147,9 +154,44 @@ func (engine searchEngine) Result() *Response {
 func (engine searchEngine) Results() []*Response {
 	responses := make([]*Response, 0)
 
-	for len(engine.requests) > 0 || len(engine.responses) > 0 {
+	for engine.busy() {
 		responses = append(responses, <-engine.responses)
 	}
 
 	return responses
+}
+
+func (engine searchEngine) busy() bool {
+	return len(engine.requests) > 0 || len(engine.responses) > 0 || len(engine.processing) > 0
+}
+
+type Service struct {
+	Suggestions uint
+	Targets     config.Variables
+}
+
+func NewService(variables config.Variables) Service {
+	return Service{Targets: variables}
+}
+
+func (s Service) Search(query ...string) []*Response {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	ctx = context.WithValue(ctx, CtxParallel, runtime.GOMAXPROCS(0)*5)
+
+	defer cancel()
+
+	seen := make(map[string]bool)
+	engine := New(ctx, s.Targets)
+
+	for _, q := range query {
+		if seen[q] {
+			continue
+		}
+
+		engine.Query(q, s.Suggestions)
+		seen[q] = true
+	}
+
+	return engine.Results()
 }

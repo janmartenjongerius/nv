@@ -1,3 +1,6 @@
+/*
+Package config provides an Exporter to export Variable structs to a provided io.Writer.
+ */
 package config
 
 import (
@@ -5,73 +8,27 @@ import (
 )
 
 type Exporter interface {
-	Export(variable *Variable) error
-	ExportList(variables []*Variable) error
+	Export(variable ...*Variable)
 }
 
-type fileExporter struct {
+type ioExporter struct {
 	output  io.Writer
-	encoder Encoder
+	format string
 }
 
-func (exporter fileExporter) write(payload string) error {
-	if _, e := exporter.output.Write([]byte(payload)); e != nil {
-		return e
-	}
+func (exporter ioExporter) Export(variable ...*Variable) {
+	WithEncoding(exporter.format, func(enc Encoding) {
+		result, _ := enc.Encode(variable...)
 
-	return nil
+		// If the list is not empty, ensure a newline at the end.
+		if len(result) > 0 {
+			result = append(result, []byte("\n")...)
+		}
+
+		_, _ = exporter.output.Write(result)
+	})
 }
 
-func (exporter fileExporter) Export(variable *Variable) error {
-	var (
-		result []byte
-		e      error
-	)
-
-	if result, e = exporter.encoder.Encode(variable); e != nil {
-		return e
-	}
-
-	return exporter.write(string(result) + "\n")
-}
-
-func (exporter fileExporter) ExportList(variables []*Variable) error {
-	var (
-		encoded []byte
-		result  string
-		e       error
-	)
-
-	if encoded, e = exporter.encoder.Encode(variables...); e != nil {
-		return e
-	}
-
-	result = string(encoded)
-
-	if len(result) > 0 {
-		result += "\n"
-	}
-
-	return exporter.write(result)
-}
-
-func NewExporter(format string, writer io.Writer) (Exporter, error) {
-	var (
-		encoder Encoder
-		e       error
-	)
-
-	if encoder, e = NewEncoding(format); e != nil {
-		return nil, e
-	}
-
-	return fileExporter{writer, encoder}, nil
-}
-
-type ExporterFactory func(format string) (Exporter, error)
-
-func NewExporterFactory(writer io.Writer) ExporterFactory {
-	return func(format string) (Exporter, error) {
-		return NewExporter(format, writer)
-	}
+func NewExporter(format string, writer io.Writer) Exporter {
+	return ioExporter{writer, format}
 }
