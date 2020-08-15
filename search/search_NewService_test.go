@@ -51,4 +51,5 @@ func ExampleNewService() {
 	// SHL -> %!q(*config.Variable=<nil>)
 	// 	"SHELL"
 	// 	"SHLVL"
+	//
 }
