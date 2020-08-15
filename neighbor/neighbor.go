@@ -55,10 +55,6 @@ func FindNearest(subject string, options []string, limit int) Neighbors {
 	}
 
 	for _, rank := range fuzzy.RankFind(strings.ToLower(subject), targets) {
-		if len(rank.Target) == 0 {
-			continue
-		}
-
 		if _, ok := ranked[rank.Target]; ok {
 			continue
 		}
