@@ -11,3 +11,13 @@ func TestFindNearest_duplicates(t *testing.T) {
 		t.Errorf("Expected len(neighbors) == %d, got %d", want, got)
 	}
 }
+
+func TestFindNearest_limit(t *testing.T) {
+	want := 3
+	neighbors := FindNearest("foo", []string{"Foo", "foo", "FoO", "FOo"}, want)
+	got := len(neighbors)
+
+	if want != got {
+		t.Errorf("Expected len(neighbors) == %d, got %d", want, got)
+	}
+}
