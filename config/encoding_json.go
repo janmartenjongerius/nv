@@ -1,5 +1,6 @@
 /*
-Package config implements an Encoder and Decoder for a JSON representation of Variable.
+JSON encoding
+By default, an Encoder and Decoder for a JSON representation of Variable is registered.
 
 For the following input:
 	Variables{
@@ -14,13 +15,15 @@ For the following input:
 	}
 
 The Encoder will output:
-	{"HOME":"C:\\Users\\Gopher","USERNAME":"Gopher"}
+	{
+		"HOME":"C:\\Users\\Gopher",
+		"USERNAME":"Gopher"
+	}
 */
 package config
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type jsonEncoder struct {
@@ -34,10 +37,10 @@ func (e jsonEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	payload := make(buffer)
 
 	for _, v := range variables {
-		payload[v.Key] = fmt.Sprintf("%v", v.Value)
+		payload[v.Key] = v.Value
 	}
 
-	return json.Marshal(payload)
+	return json.MarshalIndent(payload, "", "\t")
 }
 
 type jsonDecoder struct {
@@ -49,9 +52,9 @@ func (d jsonDecoder) Decode(payload []byte) (Variables, error) {
 	var e error
 
 	vars := make(buffer, 0)
-	result := make([]*Variable, 0)
+	result := make(Variables, 0)
 
-	if e = json.Unmarshal(payload, &vars); e == nil {
+	if e = json.Unmarshal(payload, &result); e == nil {
 		for key, value := range vars {
 			result = append(result, &Variable{
 				Key:   key,

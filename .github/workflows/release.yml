@@ -14,8 +14,8 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v1
         with:
-          go-version: '1.14'
-      - run: go vet ./... && go test ./... && go mod verify
+          go-version: '1.13'
+      - run: make test
 
   draft:
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        GOARCH: [ '386', 'amd64' ]
+        GOARCH: [ 'amd64' ]
     name: Build linux/${{ matrix.GOARCH }} DEB
     needs: [draft]
     env:
@@ -50,11 +50,13 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v1
         with:
-          go-version: '1.14'
+          go-version: '1.13'
       - name: Build linux/${{ matrix.GOARCH }}
         run: |
           VERSION="$(basename "/${{ github.ref }}")"
           VERSION="${VERSION##v}"
+
+          make dist/nv_${{ matrix.GOARCH }}.deb VERSION="$VERSION"
 
           # Build application
           BUILD_DIR="nv_${VERSION}_${{ matrix.GOARCH }}/DEBIAN"
@@ -131,7 +133,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v1
         with:
-          go-version: '1.14'
+          go-version: '1.13'
       - name: Trigger community cache flush
         run: |
           VERSION="$(basename "/${{ github.ref }}")"

@@ -1,3 +1,9 @@
+/*
+Package search holds a search Engine, which is specialized in searching through config.Variables.
+
+It is preferred for the end user to create a new Service using the NewService constructor. This allows the Service to
+abstract away the management of the search context and parallelization of the Engine.
+ */
 package search
 
 import (
@@ -15,17 +21,20 @@ const CtxParallel contextKey = "parallel"
 
 type contextKey string
 
+// The Response of a search operation.
 type Response struct {
 	Match       *config.Variable
 	Suggestions []string
 	Request     *Request
 }
 
+// A search Request, for the given Query.
 type Request struct {
 	Query       string
 	Suggestions uint
 }
 
+// Interface for a search Engine.
 type Engine interface {
 	Query(query string, suggestions uint) Engine
 	QueryAll(queries []string, suggestions uint) Engine
@@ -42,6 +51,7 @@ type searchEngine struct {
 	processing chan bool
 }
 
+// Create a new search Engine, to search through the given config.Variables.
 func New(ctx context.Context, targets config.Variables) Engine {
 	numParallel, ok := ctx.Value(CtxParallel).(uint)
 
@@ -68,15 +78,13 @@ func New(ctx context.Context, targets config.Variables) Engine {
 	return engine
 }
 
+// Query the config.Variables to find a match for the given query string.
+// When no match is found, up to the given number of suggestions is appended to the Response.
 func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	select {
 	case <-engine.ctx.Done():
 		break
 	default:
-		if suggestions < 0 {
-			suggestions = 0
-		}
-
 		engine.requests <- &Request{
 			Query:       query,
 			Suggestions: suggestions,
@@ -88,6 +96,7 @@ func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	return &engine
 }
 
+// Query all the given query strings at-once.
 func (engine searchEngine) QueryAll(queries []string, suggestions uint) Engine {
 	for _, q := range queries {
 		engine.Query(q, suggestions)
@@ -147,10 +156,12 @@ func (engine searchEngine) targetKeys() []string {
 	return keys
 }
 
+// Get the current Response from the response channel.
 func (engine searchEngine) Result() *Response {
 	return <-engine.responses
 }
 
+// Return a Response list for pending Request objects and currently processing Response objects, until the engine is drained.
 func (engine searchEngine) Results() []*Response {
 	responses := make([]*Response, 0)
 
@@ -165,15 +176,18 @@ func (engine searchEngine) busy() bool {
 	return len(engine.requests) > 0 || len(engine.responses) > 0 || len(engine.processing) > 0
 }
 
+// Describe a search Service struct.
 type Service struct {
 	Suggestions uint
 	Targets     config.Variables
 }
 
+// Create a new search Service for the given config.Variables.
 func NewService(variables config.Variables) Service {
 	return Service{Targets: variables}
 }
 
+// Search the given query strings and wait for the engine to respond with a Response for all queries.
 func (s Service) Search(query ...string) []*Response {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)

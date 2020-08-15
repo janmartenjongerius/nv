@@ -1,3 +1,10 @@
+/*
+Package neighbor holds structs to describe the results of FindNearest, which performs nearest neighbor checks against a
+provided subject and options.
+
+Each Neighbor holds a Neighbor.Name, which identifies it, and a Neighbor.Distance, describing the distance between the
+resulting Neighbor and the original subject.
+ */
 package neighbor
 
 import (
@@ -6,7 +13,7 @@ import (
 	"strings"
 )
 
-// A struct representing a neighbor, with a Distance to its relation.
+// A struct representing a Neighbor, with a Distance to its relation and a Name to use as identification.
 type Neighbor struct {
 	Name     string
 	Distance int
@@ -30,7 +37,7 @@ func (n Neighbors) Less(i, j int) bool {
 	return n[i].Distance < n[j].Distance
 }
 
-// Find the nearest, up to <limit>, Neighbors for the given subject.
+// Find the nearest, up to the given limit, Neighbors for the given subject.
 func FindNearest(subject string, options []string, limit int) Neighbors {
 	var (
 		buffer  Neighbors

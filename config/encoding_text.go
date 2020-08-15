@@ -1,5 +1,6 @@
 /*
-Package config implements an Encoder and Decoder for a text based representation of Variable.
+Text encoding
+By default, an Encoder and Decoder for a text representation of Variable is registered.
 
 For the following input:
 	Variables{
@@ -69,7 +70,7 @@ func (d textDecoder) Decode(payload []byte) (Variables, error) {
 
 func init() {
 	RegisterEncoding(
-		"text",
+		DefaultEncoding,
 		struct {
 			textEncoder
 			textDecoder

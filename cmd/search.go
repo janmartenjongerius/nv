@@ -21,6 +21,8 @@ var (
 			svc := search.NewService(config.Environment)
 			svc.Suggestions = numSuggestions
 
+			exp := config.NewExporter(format, cmd.OutOrStdout())
+
 			matches := make(config.Variables, 0)
 			misses := 0
 
@@ -54,16 +56,7 @@ var (
 				matches = append(matches, r.Match)
 			}
 
-			config.WithEncoding("text", func(enc config.Encoding) {
-				output, err := enc.Encode(matches...)
-
-				if err != nil {
-					cmd.PrintErr(err)
-					return
-				}
-
-				cmd.Print(string(output) + "\n")
-			})
+			exp.Export(matches...)
 
 			if misses > 0 {
 				cmd.SilenceUsage = true
