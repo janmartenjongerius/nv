@@ -42,6 +42,8 @@ func ExampleNewService() {
 		fmt.Println("")
 	}
 
+	fmt.Print("END")
+
 	// Output:
 	// HOME -> &{"HOME" "/home/gopher"}
 	//
@@ -52,4 +54,5 @@ func ExampleNewService() {
 	// 	"SHELL"
 	// 	"SHLVL"
 	//
+	// END
 }

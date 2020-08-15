@@ -38,7 +38,6 @@ type Request struct {
 type Engine interface {
 	Query(query string, suggestions uint) Engine
 	QueryAll(queries []string, suggestions uint) Engine
-	Result() *Response
 	Results() []*Response
 }
 
@@ -85,6 +84,7 @@ func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	case <-engine.ctx.Done():
 		break
 	default:
+		engine.processing <- true
 		engine.requests <- &Request{
 			Query:       query,
 			Suggestions: suggestions,
@@ -106,26 +106,20 @@ func (engine searchEngine) QueryAll(queries []string, suggestions uint) Engine {
 }
 
 func (engine searchEngine) processNextRequest() {
-	select {
-	case <-engine.ctx.Done():
-		break
-	default:
-		engine.processing <- true
-		request := <-engine.requests
-		response := &Response{
-			Match:       engine.targets[request.Query],
-			Suggestions: nil,
-			Request:     request,
-		}
+	request := <-engine.requests
+	response := &Response{
+		Match:       engine.targets[request.Query],
+		Suggestions: nil,
+		Request:     request,
+	}
 
-		defer func() {
-			<-engine.processing
-			engine.responses <- response
-		}()
+	defer func() {
+		<-engine.processing
+		engine.responses <- response
+	}()
 
-		if response.Match == nil && request.Suggestions > 0 {
-			response.Suggestions = append(response.Suggestions, engine.suggestions(request)...)
-		}
+	if response.Match == nil && request.Suggestions > 0 {
+		response.Suggestions = append(response.Suggestions, engine.suggestions(request)...)
 	}
 }
 
@@ -156,11 +150,6 @@ func (engine searchEngine) targetKeys() []string {
 	return keys
 }
 
-// Get the current Response from the response channel.
-func (engine searchEngine) Result() *Response {
-	return <-engine.responses
-}
-
 // Return a Response list for pending Request objects and currently processing Response objects, until the engine is drained.
 func (engine searchEngine) Results() []*Response {
 	responses := make([]*Response, 0)
@@ -173,7 +162,15 @@ func (engine searchEngine) Results() []*Response {
 }
 
 func (engine searchEngine) busy() bool {
-	return len(engine.requests) > 0 || len(engine.responses) > 0 || len(engine.processing) > 0
+	accepted := len(engine.responses) > 0 ||
+		len(engine.processing) > 0
+
+	select {
+	case <-engine.ctx.Done():
+		return accepted
+	default:
+		return len(engine.requests) > 0 || accepted
+	}
 }
 
 // Describe a search Service struct.
