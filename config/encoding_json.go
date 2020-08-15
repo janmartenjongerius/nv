@@ -48,13 +48,11 @@ type jsonDecoder struct {
 }
 
 // Allows to Decode a byte sequence into a list of Variables.
-func (d jsonDecoder) Decode(payload []byte) (Variables, error) {
-	var e error
-
+func (d jsonDecoder) Decode(payload []byte) (result Variables, err error) {
 	vars := make(buffer, 0)
-	result := make(Variables, 0)
+	result = make(Variables, 0)
 
-	if e = json.Unmarshal(payload, &result); e == nil {
+	if err = json.Unmarshal(payload, &vars); err == nil {
 		for key, value := range vars {
 			result = append(result, &Variable{
 				Key:   key,
@@ -63,7 +61,7 @@ func (d jsonDecoder) Decode(payload []byte) (Variables, error) {
 		}
 	}
 
-	return result, e
+	return result, err
 }
 
 func init() {
