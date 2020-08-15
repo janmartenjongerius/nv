@@ -26,13 +26,7 @@ var version = ""
 
 func init() {
 	if len(version) == 0 {
-		tag, err := exec.Command("git", "describe", "--tags").Output()
-
-		if err != nil {
-			version = "dev-unknown"
-			return
-		}
-
+		tag, _ := exec.Command("git", "describe", "--tags").Output()
 		version = fmt.Sprintf("dev-%s", strings.TrimSpace(string(tag)))
 	}
 }

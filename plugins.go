@@ -5,19 +5,14 @@ import (
 	"path"
 	"path/filepath"
 	"plugin"
-	"runtime"
 )
 
 var (
 	// PluginLocations tells the application where to look for plugin files.
-	PluginLocations = map[string]map[string][]string{
-		"linux": {
-			"amd64": {
-				"/usr/local/lib/nv",
-				"/usr/lib/nv",
-				"plugins",
-			},
-		},
+	PluginLocations = []string{
+		"/usr/local/lib/nv",
+		"/usr/lib/nv",
+		"plugins",
 	}
 
 	// PluginExtensions tells the plugin loader which extensions to match while loading plugins.
@@ -32,18 +27,25 @@ var (
 		for _, extension := range PluginExtensions {
 			if !info.IsDir() && filepath.Ext(info.Name()) == extension {
 				_, err = plugin.Open(path)
+				PluginsLoaded = append(PluginsLoaded, path)
+
 				break
 			}
 		}
 
 		return err
 	}
+
+	// A list of loaded plugin files.
+	PluginsLoaded []string
 )
 
 func init() {
 	wd, _ := os.Getwd()
 
-	for _, location := range PluginLocations[runtime.GOOS][runtime.GOARCH] {
+	PluginsLoaded = make([]string, 0)
+
+	for _, location := range PluginLocations {
 		if !filepath.IsAbs(location) {
 			location = path.Join(wd, location)
 		}
