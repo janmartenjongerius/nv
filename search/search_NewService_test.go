@@ -31,28 +31,19 @@ func ExampleNewService() {
 
 	for _, r := range svc.Search("HOME", "user", "SHL", "HOME") {
 		fmt.Printf(
-			"%s -> %q\n",
+			"%s -> %q",
 			r.Request.Query,
 			r.Match)
 
 		for _, s := range r.Suggestions {
-			fmt.Printf("\t%q\n", s)
+			fmt.Printf("\t%q", s)
 		}
 
 		fmt.Println("")
 	}
 
-	fmt.Print("END")
-
-	// Output:
+	// Unordered output:
 	// HOME -> &{"HOME" "/home/gopher"}
-	//
-	// user -> %!q(*config.Variable=<nil>)
-	// 	"USER"
-	//
-	// SHL -> %!q(*config.Variable=<nil>)
-	// 	"SHELL"
-	// 	"SHLVL"
-	//
-	// END
+	// user -> %!q(*config.Variable=<nil>)	"USER"
+	// SHL -> %!q(*config.Variable=<nil>)	"SHELL"	"SHLVL"
 }
