@@ -10,10 +10,11 @@ Current version: [![Stable version](https://img.shields.io/github/v/release/johm
 
 ## <img alt="Debian linux" src=https://simpleicons.org/icons/debian.svg width=20 /> Debian linux 
 
-| Package | Download |
-|:--------|:---------|
-| Nv      | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_amd64.deb) |
-| Plugins | [![DEB 64 Bit](https://img.shields.io/badge/-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/plugins_amd64.deb) |
+### Application
+- [![DEB 64-bit](https://img.shields.io/badge/Nv-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_amd64.deb)
+
+### Plugins
+- [![DEB 64 Bit](https://img.shields.io/badge/Encoding:%20XML-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_ext_encoding-xml.deb)
 
 ## <img alt="Golang" src=https://simpleicons.org/icons/go.svg width=20 /> Install from source
 

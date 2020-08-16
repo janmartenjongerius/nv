@@ -1,6 +1,9 @@
 plugins/**.so
 nv
-docs/cmd
+docs/man
+docs/markdown
+docs/rst
+docs/yaml
 dist/
 bin/
 coverage.txt
