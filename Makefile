@@ -41,7 +41,7 @@ dist/nv_ext_%.deb: plugins/%.so
 	@mkdir -p dist
 	@mv "/tmp/build/nv_ext_$*_$(VERSION)_amd64.deb" "dist/nv_ext_$*.deb"
 
-dist/nv_%.deb: bin/nv #docs/man
+dist/nv_%.deb: bin/nv docs/man
 	@echo "Version: $(VERSION)"
 	@echo "Architecture: $*"
 	@echo "Archive: $@"
@@ -55,6 +55,11 @@ dist/nv_%.deb: bin/nv #docs/man
 	@rm -rf "$(BUILD_BIN)"
 	@mkdir -p "$(BUILD_BIN)"
 	@cp bin/nv "$(BUILD_BIN)/nv"
+	@$(eval MAN_DIR="/tmp/build/nv_$(VERSION)_$*/usr/share/man/man1")
+	@echo "Man pages: $(MAN_DIR)"
+	@mkdir -p "$(MAN_DIR)"
+	@cp docs/man/*.1 "$(MAN_DIR)"
+	@for man in "$(MAN_DIR)/"*.1; do gzip "$$man"; done
 	@touch "$(BUILD_DIR)/control"
 	@>>"$(BUILD_DIR)/control" echo "Package: nv"
 	@>>"$(BUILD_DIR)/control" echo "Version: $(VERSION)"
@@ -79,7 +84,10 @@ clean:
 	@rm -rf bin
 	@rm -rf dist
 	@rm -f plugins/*.so
-	@rm -rf docs/cmd
+	@rm -rf docs/man
+	@rm -rf docs/markdown
+	@rm -rf docs/rst
+	@rm -rf docs/yaml
 	@rm -f coverage.txt
 	@rm -rf /tmp/build
 
