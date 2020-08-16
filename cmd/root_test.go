@@ -21,10 +21,17 @@ func TestRootCmd_Run(t *testing.T) {
 }
 
 func TestExecute(t *testing.T) {
+	out := &bytes.Buffer{}
+	rootCmd.SetOut(out)
+
 	err := Execute("test")
 
 	if err != nil {
 		t.Errorf("Execute produced an error: %v", err)
+	}
+
+	if out.Len() == 0 {
+		t.Errorf("Nothing exported to buffer")
 	}
 }
 
