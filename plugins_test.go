@@ -5,6 +5,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -23,5 +25,15 @@ func TestInit(t *testing.T) {
 				want = append(want, matches...)
 			}
 		}
+	}
+
+	got := regexp.MustCompile("^(" + strings.Join(PluginsLoaded, "|") + ")$")
+
+	for _, f := range want {
+		t.Run(f, func(t *testing.T) {
+			if !got.MatchString(f) {
+				t.Errorf("Missing plugin %q. Available %q", f, PluginsLoaded)
+			}
+		})
 	}
 }
