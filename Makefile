@@ -5,7 +5,7 @@ plugins/%.so: plugins/%.go
 	@GOARCH=amd64 go build -v -buildmode plugin -o plugins/$*.so plugins/$*.go
 
 plugins: \
-	plugins/encoding_xml.so
+	plugins/encoding-xml.so
 
 bin/nv: main.go plugins.go cmd/*.go config/*.go neighbor/*.go search/*.go
 	@mkdir -p bin
