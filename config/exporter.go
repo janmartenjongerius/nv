@@ -32,7 +32,8 @@ func (exporter ioExporter) Export(variable ...*Variable) {
 	})
 }
 
-// Create a new Exporter for the given format, using the given io.Writer as target.
+// NewExporter creates a new Exporter for the given format, using the given
+// io.Writer as target.
 func NewExporter(format string, writer io.Writer) Exporter {
 	return ioExporter{writer, format}
 }

@@ -36,7 +36,7 @@ var (
 		return err
 	}
 
-	// A list of loaded plugin files.
+	// PluginsLoaded is a list of loaded plugin files.
 	PluginsLoaded []string
 )
 

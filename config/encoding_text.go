@@ -29,7 +29,7 @@ type textEncoder struct {
 	Encoder
 }
 
-// Allows to Encode Variable structs into a byte sequence.
+// Encode allows to encode Variable structs into a byte sequence.
 func (e textEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	result := make([]string, len(variables))
 
@@ -44,7 +44,7 @@ type textDecoder struct {
 	Decoder
 }
 
-// Allows to Decode a byte sequence into a list of Variables.
+// Decode allows to decode a byte sequence into a list of Variables.
 func (d textDecoder) Decode(payload []byte) (Variables, error) {
 	variables := make([]*Variable, 0)
 

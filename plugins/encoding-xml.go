@@ -45,7 +45,7 @@ type xmlVariable struct {
 	Value string `xml:",chardata"`
 }
 
-// Allows to Encode config.Variable structs into a byte sequence.
+// Encode allows to encode config.Variable structs into a byte sequence.
 func (e xmlEncoder) Encode(variables ...*config.Variable) ([]byte, error) {
 	vars := xmlVariables{}
 
@@ -64,7 +64,7 @@ type xmlDecoder struct {
 	config.Decoder
 }
 
-// Allows to Decode a byte sequence into a list of config.Variables.
+// Decode allows to decode a byte sequence into a list of config.Variables.
 func (d xmlDecoder) Decode(payload []byte) (config.Variables, error) {
 	cfg := xmlConfig{}
 	result := config.Variables{}

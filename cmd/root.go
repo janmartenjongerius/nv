@@ -41,17 +41,17 @@ func (v *formatValue) Set(val string) error {
 	return nil
 }
 
-// Get the Type of the format flag.
+// Type gets the type of the format flag.
 func (v *formatValue) Type() string {
 	return "string"
 }
 
-// Get the format flag value as a String.
+// String gets the format flag value as a string.
 func (v *formatValue) String() string {
 	return string(*v)
 }
 
-// Executes the root command.
+// Execute runs the root command.
 func Execute(version string) error {
 	rootCmd.Version = version
 

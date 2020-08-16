@@ -9,19 +9,19 @@ import (
 	"os"
 )
 
-// The environment variables expressed in a map of Variable entries.
+// Environment holds the environment variables expressed in Variables.
 var Environment = make(Variables, 0)
 
-// The default encoding format.
+// DefaultEncoding is the default encoding format.
 var DefaultEncoding = "text"
 
-// A struct representing a configuration entry by Key and Value.
+// Variable is a struct representing a configuration entry by Key and Value.
 type Variable struct {
 	Key   string
 	Value string
 }
 
-// A map of configuration Variable entries.
+// Variables are a list of configuration Variable entries.
 type Variables []*Variable
 
 // Initialize the environment variables.

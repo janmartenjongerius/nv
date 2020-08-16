@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleEngine_QueryAll() {
-	engine := New(
+	engine := NewEngine(
 		context.Background(),
 		config.Variables{
 			&config.Variable{
@@ -35,7 +35,7 @@ func ExampleEngine_QueryAll() {
 func ExampleEngine_Query_interrupted() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	engine := New(
+	engine := NewEngine(
 		ctx,
 		config.Variables{
 			&config.Variable{

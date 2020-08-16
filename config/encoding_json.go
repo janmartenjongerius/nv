@@ -32,7 +32,7 @@ type jsonEncoder struct {
 
 type buffer map[string]string
 
-// Allows to Encode Variable structs into a byte sequence.
+// Encode allows to encode Variable structs into a byte sequence.
 func (e jsonEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	payload := make(buffer)
 
@@ -47,7 +47,7 @@ type jsonDecoder struct {
 	Decoder
 }
 
-// Allows to Decode a byte sequence into a list of Variables.
+// Decode allows to decode a byte sequence into a list of Variables.
 func (d jsonDecoder) Decode(payload []byte) (result Variables, err error) {
 	vars := make(buffer, 0)
 	result = make(Variables, 0)

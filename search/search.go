@@ -16,25 +16,25 @@ import (
 type requestChan chan *Request
 type responseChan chan *Response
 
-// Context key defining the number of parallel queries.
+// CtxParallel is a context key defining the number of parallel queries.
 const CtxParallel contextKey = "parallel"
 
 type contextKey string
 
-// The Response of a search operation.
+// Response of a search operation.
 type Response struct {
 	Match       *config.Variable
 	Suggestions []string
 	Request     *Request
 }
 
-// A search Request, for the given Query.
+// Request describes a search request for the given Query.
 type Request struct {
 	Query       string
 	Suggestions uint
 }
 
-// Interface for a search Engine.
+// Engine describes the capabilities of a search engine.
 type Engine interface {
 	Query(query string, suggestions uint) Engine
 	QueryAll(queries []string, suggestions uint) Engine
@@ -50,8 +50,9 @@ type searchEngine struct {
 	processing chan bool
 }
 
-// Create a new search Engine, to search through the given config.Variables.
-func New(ctx context.Context, targets config.Variables) Engine {
+// NewEngine creates a new search Engine, to search through the given
+// config.Variables.
+func NewEngine(ctx context.Context, targets config.Variables) Engine {
 	numParallel, ok := ctx.Value(CtxParallel).(uint)
 
 	if ok == false || numParallel < 1 {
@@ -77,8 +78,9 @@ func New(ctx context.Context, targets config.Variables) Engine {
 	return engine
 }
 
-// Query the config.Variables to find a match for the given query string.
-// When no match is found, up to the given number of suggestions is appended to the Response.
+// Query queries the config.Variables to find a match for the given query string.
+// When no match is found, up to the given number of suggestions is appended to
+// the Response.
 func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	select {
 	case <-engine.ctx.Done():
@@ -96,7 +98,7 @@ func (engine searchEngine) Query(query string, suggestions uint) Engine {
 	return &engine
 }
 
-// Query all the given query strings at-once.
+// QueryAll queries all the given query strings at-once.
 func (engine searchEngine) QueryAll(queries []string, suggestions uint) Engine {
 	for _, q := range queries {
 		engine.Query(q, suggestions)
@@ -150,7 +152,8 @@ func (engine searchEngine) targetKeys() []string {
 	return keys
 }
 
-// Return a Response list for pending Request objects and currently processing Response objects, until the engine is drained.
+// Results returns a Response list for pending Request objects and currently
+// processing Response objects, until the engine is no longer "busy".
 func (engine searchEngine) Results() []*Response {
 	responses := make([]*Response, 0)
 
@@ -173,18 +176,19 @@ func (engine searchEngine) busy() bool {
 	}
 }
 
-// Describe a search Service struct.
+// Service describes a search service struct.
 type Service struct {
 	Suggestions uint
 	Targets     config.Variables
 }
 
-// Create a new search Service for the given config.Variables.
+// NewService creates a new search Service for the given config.Variables.
 func NewService(variables config.Variables) Service {
 	return Service{Targets: variables}
 }
 
-// Search the given query strings and wait for the engine to respond with a Response for all queries.
+// Search searches the given query strings and wait for the engine to respond
+// with a Response for all queries.
 func (s Service) Search(query ...string) []*Response {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -193,7 +197,7 @@ func (s Service) Search(query ...string) []*Response {
 	defer cancel()
 
 	seen := make(map[string]bool)
-	engine := New(ctx, s.Targets)
+	engine := NewEngine(ctx, s.Targets)
 
 	for _, q := range query {
 		if seen[q] {

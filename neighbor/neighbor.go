@@ -13,16 +13,17 @@ import (
 	"strings"
 )
 
-// A struct representing a Neighbor, with a Distance to its relation and a Name to use as identification.
+// Neighbor is a struct representing a neighbor, with a Distance to its relation
+// and a Name to use as identification.
 type Neighbor struct {
 	Name     string
 	Distance int
 }
 
-// A slice of Neighbor objects.
+// Neighbors is a slice of Neighbor objects.
 type Neighbors []*Neighbor
 
-// The number of Neighbor object in the current slice.
+// Len provides the number of Neighbor object in the current slice.
 func (n Neighbors) Len() int {
 	return len(n)
 }
@@ -32,12 +33,14 @@ func (n Neighbors) Swap(i, j int) {
 	n[i], n[j] = n[j], n[i]
 }
 
-// Determine if the Neighbor at offset i has a lesser Neighbor.Distance than Neighbor at offset j.
+// Less will determine if the Neighbor at offset i has a lesser
+// Neighbor.Distance than Neighbor at offset j.
 func (n Neighbors) Less(i, j int) bool {
 	return n[i].Distance < n[j].Distance
 }
 
-// Find the nearest, up to the given limit, Neighbors for the given subject.
+// FindNearest returns the nearest, up to the given limit, Neighbors for the
+// given subject.
 func FindNearest(subject string, options []string, limit int) Neighbors {
 	var (
 		buffer  Neighbors
