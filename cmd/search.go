@@ -26,13 +26,24 @@ var (
 			matches := make(config.Variables, 0)
 			misses := 0
 
+			// Work around a bug in cobra.
+			// See: https://github.com/spf13/cobra/pull/894
+			var printErr = func(message string) {
+				_, _ = fmt.Fprint(cmd.ErrOrStderr(), message)
+			}
+
 			for _, r := range svc.Search(args...) {
 				if r.Match == nil && len(r.Suggestions) == 1 && svc.Suggestions > 1 {
 					r = svc.Search(r.Suggestions[0])[0]
 				}
 
 				if r.Match == nil {
-					cmd.PrintErrf("Could not find %s.\n", r.Request.Query)
+					cmd.PrintErr(
+						fmt.Sprintf(
+							"Could not find %s.\n",
+							r.Request.Query,
+						),
+					)
 					misses++
 				}
 
@@ -44,10 +55,10 @@ var (
 							suggestion += fmt.Sprintf("   - %s\n", s)
 						}
 
-						cmd.PrintErr(suggestion)
+						printErr(suggestion)
 						time.Sleep(time.Millisecond * 100)
 					} else {
-						cmd.PrintErrln("  No suggestions")
+						printErr("  No suggestions.\n")
 					}
 
 					continue
