@@ -4,8 +4,6 @@ More than ever, modern development relies on environment variables. To easily de
 a chain of commands specific to your operating system would do. However, Nv wants to solve this in a modern way,
 cross platform.
 
-* [Command overview](cmd/nv.md)
-
 # Download
 
 Current version: [![Stable version](https://img.shields.io/github/v/release/johmanx10/nv?include_prereleases&label=)](https://github.com/johmanx10/nv/releases/latest)
