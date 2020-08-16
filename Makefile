@@ -1,4 +1,4 @@
-VERSION := $(shell git describe --tags)
+VERSION := $(shell git describe --tags | tr -d v)
 
 plugins/%.so: plugins/%.go
 	@echo Building plugin: $*
@@ -24,8 +24,9 @@ dist/nv_ext_%.deb: plugins/%.so
 	@echo "Build dir: $(BUILD_DIR)"
 	@rm -rf "$(BUILD_DIR)"
 	@mkdir -p "$(BUILD_DIR)"
-	@$(eval BUILD_LIB="$(BUILD_DIR)/../usr/lib/nv")
+	@$(eval BUILD_LIB="/tmp/build/nv_ext_$*_$(VERSION)_amd64/usr/lib/nv")
 	@echo "Build lib dir: $(BUILD_LIB)"
+	@rm -rf "$(BUILD_LIB)"
 	@mkdir -p "$(BUILD_LIB)"
 	@cp "plugins/$*.so" "$(BUILD_LIB)/$*.so"
 	@touch "$(BUILD_DIR)/control"
@@ -49,8 +50,9 @@ dist/nv_%.deb: bin/nv #docs/man
 	@echo "Build dir: $(BUILD_DIR)"
 	@rm -rf "$(BUILD_DIR)"
 	@mkdir -p "$(BUILD_DIR)"
-	@$(eval BUILD_BIN="$(BUILD_DIR)/../usr/bin")
+	@$(eval BUILD_BIN="/tmp/build/nv_$(VERSION)_$*/usr/bin")
 	@echo "Build bin dir: $(BUILD_BIN)"
+	@rm -rf "$(BUILD_BIN)"
 	@mkdir -p "$(BUILD_BIN)"
 	@cp bin/nv "$(BUILD_BIN)/nv"
 	@touch "$(BUILD_DIR)/control"
@@ -65,6 +67,13 @@ dist/nv_%.deb: bin/nv #docs/man
 	@mkdir -p dist
 	@mv "/tmp/build/nv_$(VERSION)_$*.deb" "dist/nv_$*.deb"
 
+dist: \
+	dist/nv_amd64.deb \
+	dist/nv_ext_encoding-xml.deb
+
+install: dist
+	@for pkg in dist/*.deb; do sudo dpkg -i "$$pkg"; done
+
 clean:
 	@rm -f nv
 	@rm -rf bin
@@ -72,6 +81,7 @@ clean:
 	@rm -f plugins/*.so
 	@rm -rf docs/cmd
 	@rm -f coverage.txt
+	@rm -rf /tmp/build
 
 test:
 	@go vet ./...

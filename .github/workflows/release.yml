@@ -49,12 +49,7 @@ jobs:
         with:
           go-version: 1.13
       - name: Build binaries
-        run: |
-          VERSION="$(basename "/${{ github.ref }}")"
-          VERSION="${VERSION##v}"
-
-          make dist/nv_amd64.deb VERSION="$VERSION"
-          make dist/nv_ext_encoding-xml.deb VERSION="$VERSION"
+        run: make dist
       - name: Upload application DEB
         uses: actions/upload-release-asset@v1
         env:
