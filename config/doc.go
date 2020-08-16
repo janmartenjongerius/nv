@@ -33,5 +33,5 @@ already present, this happens the moment WithEncoding is invoked.
 
 When explicitly checking against an available Encoding, the functions
 HasEncoding and GetEncodings will be of use.
- */
+*/
 package config

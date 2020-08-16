@@ -31,7 +31,7 @@ For the following input:
 The encoder will output:
 	HOME=C:\Users\Gopher
 	USERNAME=Gopher
- */
+*/
 func (e textEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	result := make([]string, len(variables))
 

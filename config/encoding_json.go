@@ -34,7 +34,7 @@ The encoder will output:
 		"HOME":"C:\\Users\\Gopher",
 		"USERNAME":"Gopher"
 	}
- */
+*/
 func (e jsonEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	payload := make(buffer)
 
