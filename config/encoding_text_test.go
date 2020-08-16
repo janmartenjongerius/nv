@@ -39,7 +39,7 @@ func TestTextDecoder_Decode(t *testing.T) {
 		{
 			in:   []byte("HOME:/home/gopher"),
 			want: Variables{},
-			err:  IllFormattedVariable,
+			err:  ErrIllFormattedVariable,
 		},
 	}
 

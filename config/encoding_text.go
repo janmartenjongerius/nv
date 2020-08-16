@@ -58,7 +58,7 @@ func (d textDecoder) Decode(payload []byte) (Variables, error) {
 		components := strings.SplitN(line, "=", 2)
 
 		if len(components) != 2 {
-			return nil, IllFormattedVariable
+			return nil, ErrIllFormattedVariable
 		}
 
 		variables = append(variables, &Variable{

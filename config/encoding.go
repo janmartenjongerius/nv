@@ -6,11 +6,11 @@ import (
 )
 
 var (
-	// UnknownEncodingError is returned when an unknown encoding is requested using NewEncoding.
-	UnknownEncodingError = errors.New("unknown encoding requested")
+	// ErrUnknownEncoding is returned when an unknown encoding is requested using NewEncoding.
+	ErrUnknownEncoding = errors.New("unknown encoding requested")
 
-	// IllFormattedVariable is returned when a payload contains a line that cannot be resolved to a config.Variable.
-	IllFormattedVariable = errors.New("variable is incorrectly formatted")
+	// ErrIllFormattedVariable is returned when a payload contains a line that cannot be resolved to a config.Variable.
+	ErrIllFormattedVariable = errors.New("variable is incorrectly formatted")
 
 	// Registry of Encoding instances.
 	encodings = make(map[string]Encoding)
@@ -74,7 +74,7 @@ func NewEncoding(format string) (Encoding, error) {
 	encoding, ok := encodings[format]
 
 	if !ok {
-		return nil, UnknownEncodingError
+		return nil, ErrUnknownEncoding
 	}
 
 	return encoding, nil
