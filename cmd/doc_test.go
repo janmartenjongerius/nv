@@ -14,16 +14,16 @@ func TestDocCmd_PreRunE(t *testing.T) {
 	outputDir := docCmd.Flag("output-dir").Value
 	tmp := os.TempDir()
 
-	cases := []struct{
-		in string
+	cases := []struct {
+		in  string
 		err bool
 	}{
 		{
-			in: filepath.Join(tmp, "nv-test-foo"),
+			in:  filepath.Join(tmp, "nv-test-foo"),
 			err: false,
 		},
 		{
-			in: "",
+			in:  "",
 			err: true,
 		},
 	}
@@ -77,28 +77,28 @@ func TestDocCmd_RunE(t *testing.T) {
 	// Ensure the directory is made.
 	_ = docCmd.PreRunE(cmd, []string{})
 
-	cases := []struct{
-		in string
+	cases := []struct {
+		in  string
 		err bool
 	}{
 		{
-			in: "man",
+			in:  "man",
 			err: false,
 		},
 		{
-			in: "markdown",
+			in:  "markdown",
 			err: false,
 		},
 		{
-			in: "rst",
+			in:  "rst",
 			err: false,
 		},
 		{
-			in: "yaml",
+			in:  "yaml",
 			err: false,
 		},
 		{
-			in: "foo",
+			in:  "foo",
 			err: true,
 		},
 	}

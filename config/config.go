@@ -2,7 +2,7 @@
 Package config describes the structure of a Variable and lists variables for the current Environment.
 
 During the init-phase of the application, the Environment variable is populated with the result of os.Environ.
- */
+*/
 package config
 
 import (

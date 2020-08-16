@@ -7,23 +7,23 @@ import (
 )
 
 func TestTextDecoder_Decode(t *testing.T) {
-	cases := []struct{
-		in []byte
+	cases := []struct {
+		in   []byte
 		want Variables
-		err error
+		err  error
 	}{
 		{
-			in:   []byte("HOME=/home/gopher"),
+			in: []byte("HOME=/home/gopher"),
 			want: Variables{
 				&Variable{
 					Key:   "HOME",
 					Value: "/home/gopher",
 				},
 			},
-			err:  nil,
+			err: nil,
 		},
 		{
-			in:   []byte("HOME=/home/gopher\n\nUSER=gopher"),
+			in: []byte("HOME=/home/gopher\n\nUSER=gopher"),
 			want: Variables{
 				&Variable{
 					Key:   "HOME",
@@ -34,7 +34,7 @@ func TestTextDecoder_Decode(t *testing.T) {
 					Value: "gopher",
 				},
 			},
-			err:  nil,
+			err: nil,
 		},
 		{
 			in:   []byte("HOME:/home/gopher"),
@@ -57,7 +57,7 @@ func TestTextDecoder_Decode(t *testing.T) {
 				t.Errorf("Unexpected error %q; expected %q", err, c.err)
 			}
 
-			if len(c.want) + len(got) > 0 && !reflect.DeepEqual(got, c.want) {
+			if len(c.want)+len(got) > 0 && !reflect.DeepEqual(got, c.want) {
 				t.Errorf("Unexpected variables. Got %v; Want %v", got, c.want)
 			}
 		})

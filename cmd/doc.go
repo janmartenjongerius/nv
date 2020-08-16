@@ -19,8 +19,8 @@ var (
 	//
 	// See https://golang.org/pkg/os/#Chown
 	supportsChown = !regexp.
-		MustCompile("^(windows|plan9)$").
-		MatchString(runtime.GOOS)
+			MustCompile("^(windows|plan9)$").
+			MatchString(runtime.GOOS)
 
 	docCmd = &cobra.Command{
 		Use:       "doc [man|markdown|rst|yaml]",
@@ -34,7 +34,7 @@ var (
 			}
 
 			// Ensure the directory exists.
-			err = os.MkdirAll(docOutputDir, os.ModeDir | 0755)
+			err = os.MkdirAll(docOutputDir, os.ModeDir|0755)
 
 			// Ensure the directory belongs to the current user.
 			// This is required if the ownership is inherited from a parent

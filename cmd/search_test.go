@@ -12,34 +12,34 @@ import (
 func TestSearchCmd_RunE(t *testing.T) {
 	cmd := &cobra.Command{}
 
-	cases := []struct{
-		name string
-		env config.Variables
+	cases := []struct {
+		name           string
+		env            config.Variables
 		numSuggestions uint64
-		args []string
-		err bool
-		stdout string
-		stderr string
+		args           []string
+		err            bool
+		stdout         string
+		stderr         string
 	}{
 		{
-			name: "Empty environment - With suggestions",
-			args: []string{"HOME"},
+			name:           "Empty environment - With suggestions",
+			args:           []string{"HOME"},
 			numSuggestions: 5,
-			err: true,
-			stderr: "Could not find HOME.\n  No suggestions.\n",
+			err:            true,
+			stderr:         "Could not find HOME.\n  No suggestions.\n",
 		},
 		{
-			name: "Empty environment - No suggestions",
-			args: []string{"HOME"},
+			name:           "Empty environment - No suggestions",
+			args:           []string{"HOME"},
 			numSuggestions: 0,
-			err: true,
-			stderr: "Could not find HOME.\n  No suggestions.\n",
+			err:            true,
+			stderr:         "Could not find HOME.\n  No suggestions.\n",
 		},
 		{
-			name: "Single variable - Match",
-			args: []string{"HOME"},
+			name:           "Single variable - Match",
+			args:           []string{"HOME"},
 			numSuggestions: 0,
-			stdout: "HOME=/home/gopher\n",
+			stdout:         "HOME=/home/gopher\n",
 			env: config.Variables{
 				&config.Variable{
 					Key:   "HOME",
@@ -48,12 +48,12 @@ func TestSearchCmd_RunE(t *testing.T) {
 			},
 		},
 		{
-			name: "One match, one fail - No suggestions",
-			args: []string{"HOME", "USER"},
+			name:           "One match, one fail - No suggestions",
+			args:           []string{"HOME", "USER"},
 			numSuggestions: 0,
-			err: true,
-			stdout: "HOME=/home/gopher\n",
-			stderr: "Could not find USER.\n  No suggestions.\n",
+			err:            true,
+			stdout:         "HOME=/home/gopher\n",
+			stderr:         "Could not find USER.\n  No suggestions.\n",
 			env: config.Variables{
 				&config.Variable{
 					Key:   "HOME",
@@ -62,12 +62,12 @@ func TestSearchCmd_RunE(t *testing.T) {
 			},
 		},
 		{
-			name: "One match, one fail - Single suggestion",
-			args: []string{"HOME", "USER"},
+			name:           "One match, one fail - Single suggestion",
+			args:           []string{"HOME", "USER"},
 			numSuggestions: 1,
-			err: true,
-			stdout: "HOME=/home/gopher\n",
-			stderr: "Could not find USER.\n  Suggestions:\n   - USER_LEVEL\n",
+			err:            true,
+			stdout:         "HOME=/home/gopher\n",
+			stderr:         "Could not find USER.\n  Suggestions:\n   - USER_LEVEL\n",
 			env: config.Variables{
 				&config.Variable{
 					Key:   "HOME",
@@ -80,12 +80,12 @@ func TestSearchCmd_RunE(t *testing.T) {
 			},
 		},
 		{
-			name: "One match, one fail - Multiple suggestions",
-			args: []string{"HOME", "USER"},
+			name:           "One match, one fail - Multiple suggestions",
+			args:           []string{"HOME", "USER"},
 			numSuggestions: 1,
-			err: true,
-			stdout: "HOME=/home/gopher\n",
-			stderr: "Could not find USER.\n  Suggestions:\n   - USER_LEVEL\n",
+			err:            true,
+			stdout:         "HOME=/home/gopher\n",
+			stderr:         "Could not find USER.\n  Suggestions:\n   - USER_LEVEL\n",
 			env: config.Variables{
 				&config.Variable{
 					Key:   "HOME",
@@ -102,10 +102,10 @@ func TestSearchCmd_RunE(t *testing.T) {
 			},
 		},
 		{
-			name: "One match, one automatic correction",
-			args: []string{"HOME", "USR"},
+			name:           "One match, one automatic correction",
+			args:           []string{"HOME", "USR"},
 			numSuggestions: 3,
-			stdout: "HOME=/home/gopher\nUSER=gopher\n",
+			stdout:         "HOME=/home/gopher\nUSER=gopher\n",
 			env: config.Variables{
 				&config.Variable{
 					Key:   "HOME",

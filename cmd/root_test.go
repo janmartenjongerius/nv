@@ -37,8 +37,8 @@ func TestExecute(t *testing.T) {
 
 func TestFormatValue_Set(t *testing.T) {
 	value := new(formatValue)
-	cases := []struct{
-		in string
+	cases := []struct {
+		in  string
 		err bool
 	}{
 		{
@@ -50,8 +50,8 @@ func TestFormatValue_Set(t *testing.T) {
 	for _, format := range config.GetEncodings() {
 		cases = append(
 			cases,
-			struct{
-				in string
+			struct {
+				in  string
 				err bool
 			}{in: format, err: false})
 	}

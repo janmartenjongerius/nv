@@ -1,7 +1,7 @@
 /*
 Exporting variables
 Using an Exporter, Variable structs can be written a provided io.Writer, for a given format.
- */
+*/
 package config
 
 import (
@@ -14,7 +14,7 @@ type Exporter interface {
 }
 
 type ioExporter struct {
-	output  io.Writer
+	output io.Writer
 	format string
 }
 

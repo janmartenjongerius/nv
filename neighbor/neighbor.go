@@ -4,7 +4,7 @@ provided subject and options.
 
 Each Neighbor holds a Neighbor.Name, which identifies it, and a Neighbor.Distance, describing the distance between the
 resulting Neighbor and the original subject.
- */
+*/
 package neighbor
 
 import (

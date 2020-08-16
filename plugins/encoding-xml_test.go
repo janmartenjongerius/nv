@@ -8,21 +8,21 @@ import (
 )
 
 var encodeTests = []struct {
-	in config.Variables
+	in   config.Variables
 	want []byte
 }{
 	{
 		in: config.Variables{
 			&config.Variable{
-				Key: "HOME",
+				Key:   "HOME",
 				Value: "C:\\Users\\Gopher",
 			},
 			&config.Variable{
-				Key: "USERNAME",
+				Key:   "USERNAME",
 				Value: "Gopher",
 			},
 			&config.Variable{
-				Key: "EMAIL",
+				Key:   "EMAIL",
 				Value: "Gopher <gopher@golang.goph>",
 			},
 		},
@@ -33,7 +33,7 @@ var encodeTests = []struct {
 </Config>`),
 	},
 	{
-		in: config.Variables{},
+		in:   config.Variables{},
 		want: []byte(`<Config></Config>`),
 	},
 }
@@ -72,7 +72,7 @@ func TestXmlEncoder_Encode(t *testing.T) {
 }
 
 var decodeTests = []struct {
-	in []byte
+	in   []byte
 	want config.Variables
 }{
 	{
@@ -86,21 +86,21 @@ var decodeTests = []struct {
 `),
 		want: config.Variables{
 			&config.Variable{
-				Key: "HOME",
+				Key:   "HOME",
 				Value: "C:\\Users\\Gopher",
 			},
 			&config.Variable{
-				Key: "USERNAME",
+				Key:   "USERNAME",
 				Value: "Gopher",
 			},
 			&config.Variable{
-				Key: "EMAIL",
+				Key:   "EMAIL",
 				Value: "Gopher <gopher@golang.goph>",
 			},
 		},
 	},
 	{
-		in: []byte(`<Config></Config>`),
+		in:   []byte(`<Config></Config>`),
 		want: config.Variables{},
 	},
 }

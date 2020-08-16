@@ -6,20 +6,20 @@ import (
 )
 
 func TestJsonDecoder_Decode(t *testing.T) {
-	cases := []struct{
-		in []byte
+	cases := []struct {
+		in   []byte
 		want Variables
-		err bool
+		err  bool
 	}{
 		{
-			in:   []byte("{\"HOME\":\"\\/home\\/gopher\"}"),
+			in: []byte("{\"HOME\":\"\\/home\\/gopher\"}"),
 			want: Variables{
 				&Variable{
 					Key:   "HOME",
 					Value: "/home/gopher",
 				},
 			},
-			err:  false,
+			err: false,
 		},
 		{
 			in:   []byte("{\"HOME\":42}"),
@@ -42,7 +42,7 @@ func TestJsonDecoder_Decode(t *testing.T) {
 				t.Errorf("Unexpected error %q", err)
 			}
 
-			if len(c.want) + len(got) > 0 && !reflect.DeepEqual(got, c.want) {
+			if len(c.want)+len(got) > 0 && !reflect.DeepEqual(got, c.want) {
 				t.Errorf("Unexpected variables. Got %v; Want %v", got, c.want)
 			}
 		})

@@ -3,7 +3,7 @@ Package search holds a search Engine, which is specialized in searching through 
 
 It is preferred for the end user to create a new Service using the NewService constructor. This allows the Service to
 abstract away the management of the search context and parallelization of the Engine.
- */
+*/
 package search
 
 import (

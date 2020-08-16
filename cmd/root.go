@@ -10,8 +10,8 @@ import (
 var (
 	format  = config.DefaultEncoding
 	rootCmd = &cobra.Command{
-		Use:   "nv",
-		Short: "List environment variables",
+		Use:              "nv",
+		Short:            "List environment variables",
 		TraverseChildren: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			format, _ = cmd.Root().PersistentFlags().GetString("format")

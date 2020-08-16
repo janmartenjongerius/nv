@@ -9,8 +9,8 @@ import (
 
 func TestCompletionCmd_RunE(t *testing.T) {
 	cmd := &cobra.Command{}
-	cases := []struct{
-		in string
+	cases := []struct {
+		in   string
 		want string
 	}{
 		{

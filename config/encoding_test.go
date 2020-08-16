@@ -11,8 +11,8 @@ func TestGetEncodings(t *testing.T) {
 }
 
 func TestHasEncoding(t *testing.T) {
-	cases := []struct{
-		in string
+	cases := []struct {
+		in   string
 		want bool
 	}{
 		{
@@ -28,8 +28,8 @@ func TestHasEncoding(t *testing.T) {
 	for _, format := range GetEncodings() {
 		cases = append(
 			cases,
-			struct{
-				in string
+			struct {
+				in   string
 				want bool
 			}{in: format, want: true})
 	}
