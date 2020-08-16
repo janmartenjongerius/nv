@@ -14,20 +14,20 @@ bin/nv: main.go plugins.go cmd/*.go config/*.go neighbor/*.go search/*.go
 docs/%: bin/nv
 	@bin/nv doc $* -o docs/$*
 
-dist/ext_%.deb: plugins/%.so
+dist/nv_ext_%.deb: plugins/%.so
 	@echo "Plugin: $*"
 	@echo "Version: $(VERSION)"
 	@echo "Architecture: amd64"
 	@echo "Archive: $@"
 	@echo "Prerequisites: $?"
-	@$(eval BUILD_DIR="/tmp/build/nv_ext-$*_$(VERSION)_amd64/DEBIAN")
+	@$(eval BUILD_DIR="/tmp/build/nv_ext_$*_$(VERSION)_amd64/DEBIAN")
 	@echo "Build dir: $(BUILD_DIR)"
 	@rm -rf "$(BUILD_DIR)"
 	@mkdir -p "$(BUILD_DIR)"
 	@$(eval BUILD_LIB="$(BUILD_DIR)/../usr/lib/nv")
 	@echo "Build lib dir: $(BUILD_LIB)"
 	@mkdir -p "$(BUILD_LIB)"
-	@cp "plugins/$*.so" "$(BUILD_LIB)/ext-$*.so"
+	@cp "plugins/$*.so" "$(BUILD_LIB)/$*.so"
 	@touch "$(BUILD_DIR)/control"
 	@>>"$(BUILD_DIR)/control" echo "Package: nv-ext-$*"
 	@>>"$(BUILD_DIR)/control" echo "Version: $(VERSION)"
@@ -38,7 +38,7 @@ dist/ext_%.deb: plugins/%.so
 	@>>"$(BUILD_DIR)/control" echo "Description: Nv extension $*"
 	@dpkg-deb --build "$$(dirname "$(BUILD_DIR)")/"
 	@mkdir -p dist
-	@mv "/tmp/build/nv_ext-$*_$(VERSION)_amd64.deb" "dist/nv_ext-$*.deb"
+	@mv "/tmp/build/nv_ext_$*_$(VERSION)_amd64.deb" "dist/nv_ext_$*.deb"
 
 dist/nv_%.deb: bin/nv #docs/man
 	@echo "Version: $(VERSION)"
