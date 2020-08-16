@@ -1,6 +1,21 @@
+package config
+
+import (
+	"encoding/json"
+)
+
+type jsonEncoder struct {
+	Encoder
+}
+
+type buffer map[string]string
+
 /*
+Encode allows to encode Variable structs into a byte sequence.
+
 JSON encoding
-By default, an Encoder and Decoder for a JSON representation of Variable is registered.
+By default, an encoder and decoder for a JSON representation of Variable is
+registered.
 
 For the following input:
 	Variables{
@@ -14,25 +29,12 @@ For the following input:
 		},
 	}
 
-The Encoder will output:
+The encoder will output:
 	{
 		"HOME":"C:\\Users\\Gopher",
 		"USERNAME":"Gopher"
 	}
-*/
-package config
-
-import (
-	"encoding/json"
-)
-
-type jsonEncoder struct {
-	Encoder
-}
-
-type buffer map[string]string
-
-// Encode allows to encode Variable structs into a byte sequence.
+ */
 func (e jsonEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	payload := make(buffer)
 

@@ -1,7 +1,3 @@
-/*
-Exporting variables
-Using an Exporter, Variable structs can be written a provided io.Writer, for a given format.
-*/
 package config
 
 import (

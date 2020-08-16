@@ -1,6 +1,20 @@
+package config
+
+import (
+	"fmt"
+	"strings"
+)
+
+type textEncoder struct {
+	Encoder
+}
+
 /*
+Encode allows to encode Variable structs into a byte sequence.
+
 Text encoding
-By default, an Encoder and Decoder for a text representation of Variable is registered.
+By default, an encoder and decoder for a text representation of Variable is
+registered.
 
 For the following input:
 	Variables{
@@ -14,22 +28,10 @@ For the following input:
 		},
 	}
 
-The Encoder will output:
+The encoder will output:
 	HOME=C:\Users\Gopher
 	USERNAME=Gopher
-*/
-package config
-
-import (
-	"fmt"
-	"strings"
-)
-
-type textEncoder struct {
-	Encoder
-}
-
-// Encode allows to encode Variable structs into a byte sequence.
+ */
 func (e textEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	result := make([]string, len(variables))
 
