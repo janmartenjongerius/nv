@@ -28,14 +28,14 @@ func TestInit(t *testing.T) {
 	}
 
 	got := regexp.MustCompile(
-	"^(" +
-		strings.Replace(
-			strings.Join(PluginsLoaded, "|"),
-			"\\",
-			"\\\\",
-			-1,
-		) +
-		")$",
+		"^(" +
+			strings.Replace(
+				strings.Join(PluginsLoaded, "|"),
+				"\\",
+				"\\\\",
+				-1,
+			) +
+			")$",
 	)
 
 	for _, f := range want {
