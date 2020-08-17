@@ -23,6 +23,18 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.txt
           fail_ci_if_error: true
+
+  test-windows:
+    runs-on: windows-latest
+    name: Test Windows
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.13'
+      - name: Test source code
+        run: make test && make plugins && make test
       - name: Verify formatting
         run: |
           if [[ "$(gofmt -s -l .)" != "" ]]; then
@@ -33,7 +45,7 @@ jobs:
   reportcard:
     runs-on: ubuntu-latest
     name: Check report card
-    needs: [test]
+    needs: [test, test-windows]
     steps:
       - name: Trigger report card check
         run: |

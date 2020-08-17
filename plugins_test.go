@@ -27,12 +27,25 @@ func TestInit(t *testing.T) {
 		}
 	}
 
-	got := regexp.MustCompile("^(" + strings.Join(PluginsLoaded, "|") + ")$")
+	got := regexp.MustCompile(
+	"^(" +
+		strings.Replace(
+			strings.Join(PluginsLoaded, "|"),
+			"\\",
+			"\\\\",
+			-1,
+		) +
+		")$",
+	)
 
 	for _, f := range want {
 		t.Run(f, func(t *testing.T) {
 			if !got.MatchString(f) {
-				t.Errorf("Missing plugin %q. Available %q", f, PluginsLoaded)
+				t.Errorf(
+					"Could not match %q against %q. Available %q",
+					f,
+					got.String(),
+					PluginsLoaded)
 			}
 		})
 	}

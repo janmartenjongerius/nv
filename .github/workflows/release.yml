@@ -6,21 +6,9 @@ on:
       - 'v*.*.*'
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    name: Test source
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.13
-      - run: make test
-
   draft:
     runs-on: ubuntu-latest
     name: Draft release
-    needs: [test]
     outputs:
       upload_url: ${{ steps.draft.outputs.upload_url }}
     steps:
