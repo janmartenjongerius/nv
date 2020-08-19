@@ -14,9 +14,23 @@ Nv is written in Go and builds into a native binary.
 
 # Installation
 
+Either install the application through Go:
+
 ```
 go install janmarten.name/nv
 ```
+
+Or clone the repository and install from source:
+
+```
+git clone git@github.com:johmanx10/nv.git
+cd nv
+make bin/nv
+```
+
+For builds from source, please refer to
+[Go platform specific information](https://github.com/golang/go/wiki#platform-specific-information).
+
 
 # Project status
 
@@ -29,3 +43,10 @@ go install janmarten.name/nv
 | Source code size | [![Code size in bytes](https://img.shields.io/github/languages/code-size/johmanx10/nv?label=&logo=git&logoColor=white)](https://github.com/johmanx10/nv) |
 | Code quality     | [![Go Report Card](https://goreportcard.com/badge/github.com/johmanx10/nv)](https://goreportcard.com/report/github.com/johmanx10/nv) [![Codecov](https://img.shields.io/codecov/c/github/johmanx10/nv?label=Coverage&logo=codecov&logoColor=white)](https://codecov.io/gh/johmanx10/nv) |
 | License          | [![License](https://img.shields.io/github/license/johmanx10/nv?label=&color=blue)](https://github.com/johmanx10/nv/blob/main/LICENSE) |
+
+# Special thanks
+
+| Supporter | Support |
+|----:|:---:|
+| [![JetBrains logo](docs/img/jetbrains.png)](https://www.jetbrains.com/?from=NV) |  This project is supported by [JetBrains](https://www.jetbrains.com/?from=NV) through providing a license for their [Go IDE, Goland](https://www.jetbrains.com/go/?from=NV). <br/><br/>[![Goland IDE](docs/img/logo-goland.png)](https://www.jetbrains.com/go/?from=NV) |
+
