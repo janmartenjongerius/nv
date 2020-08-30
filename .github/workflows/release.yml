@@ -25,7 +25,12 @@ jobs:
 
   build-deb:
     runs-on: ubuntu-latest
-    name: Build DEB
+    strategy:
+      matrix:
+        package:
+          - nv_amd64.deb
+          - nv_ext_encoding-xml.deb
+    name: Build ${{ matrix.package }}
     needs: [draft]
     env:
       GOOS: linux
@@ -36,25 +41,16 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.13
-      - name: Build binaries
-        run: make dist
-      - name: Upload application DEB
+      - name: Build ${{ matrix.package }}
+        run: make dist/${{ matrix.package }}
+      - name: Upload ${{ matrix.package }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft.outputs.upload_url }}
-          asset_path: dist/nv_amd64.deb
-          asset_name: nv_amd64.deb
-          asset_content_type: application/vnd.debian.binary-package
-      - name: Upload ext_encoding_xml DEB
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.draft.outputs.upload_url }}
-          asset_path: dist/nv_ext_encoding-xml.deb
-          asset_name: nv_ext_encoding-xml.deb
+          asset_path: dist/${{ matrix.package }}
+          asset_name: ${{ matrix.package }}
           asset_content_type: application/vnd.debian.binary-package
 
   community-update:
