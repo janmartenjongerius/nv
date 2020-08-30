@@ -1,15 +1,27 @@
 VERSION := $(shell git describe --tags | tr -d v)
+GOARCH=amd64
+LD_FLAGS=-X 'main.version=$(VERSION)'
 
-plugins/%.so: plugins/%.go
+plugins/%.so: plugins/%.go go.sum
 	@echo Building plugin: $*
-	@GOARCH=amd64 go build -v -buildmode plugin -o plugins/$*.so plugins/$*.go
+	@go build -v \
+		-ldflags="$(LD_FLAGS)" \
+		-buildmode plugin \
+		-o plugins/$*.so \
+		plugins/$*.go
 
 plugins: \
 	plugins/encoding-xml.so
 
-bin/nv: main.go plugins.go cmd/*.go config/*.go neighbor/*.go search/*.go
+go.sum: go.mod
+	@go mod tidy
+
+bin/nv: main.go plugins.go */*.go go.sum
 	@mkdir -p bin
-	@go build -v -ldflags="-X 'main.version=$(VERSION)'" -o bin/nv main.go plugins.go
+	@go build -v \
+		-ldflags="$(LD_FLAGS)" \
+		-o bin/nv \
+		main.go plugins.go
 
 docs/%: bin/nv
 	@bin/nv doc $* -o docs/$*
@@ -32,6 +44,7 @@ dist/nv_ext_%.deb: plugins/%.so
 	@touch "$(BUILD_DIR)/control"
 	@>>"$(BUILD_DIR)/control" echo "Package: nv-ext-$*"
 	@>>"$(BUILD_DIR)/control" echo "Version: $(VERSION)"
+	@>>"$(BUILD_DIR)/control" echo "Enhances: nv"
 	@>>"$(BUILD_DIR)/control" echo "Architecture: amd64"
 	@>>"$(BUILD_DIR)/control" echo "Essential: no"
 	@>>"$(BUILD_DIR)/control" echo "Priority: optional"
@@ -59,7 +72,7 @@ dist/nv_%.deb: bin/nv docs/man
 	@echo "Man pages: $(MAN_DIR)"
 	@mkdir -p "$(MAN_DIR)"
 	@cp docs/man/*.1 "$(MAN_DIR)"
-	@for man in "$(MAN_DIR)/"*.1; do gzip "$$man"; done
+	@for man in "$(MAN_DIR)/"*.1; do gzip -f "$$man"; done
 	@touch "$(BUILD_DIR)/control"
 	@>>"$(BUILD_DIR)/control" echo "Package: nv"
 	@>>"$(BUILD_DIR)/control" echo "Version: $(VERSION)"
@@ -72,29 +85,37 @@ dist/nv_%.deb: bin/nv docs/man
 	@mkdir -p dist
 	@mv "/tmp/build/nv_$(VERSION)_$*.deb" "dist/nv_$*.deb"
 
-dist: \
+install: \
 	dist/nv_amd64.deb \
 	dist/nv_ext_encoding-xml.deb
-
-install: dist
-	@for pkg in dist/*.deb; do sudo dpkg -i "$$pkg"; done
+	@for pkg in $?; do sudo dpkg -i "$$pkg"; done
 
 clean:
 	@rm -f nv
 	@rm -rf bin
 	@rm -rf dist
 	@rm -f plugins/*.so
+	@rm -f plugins/dummy.go
 	@rm -rf docs/man
 	@rm -rf docs/markdown
 	@rm -rf docs/rst
 	@rm -rf docs/yaml
 	@rm -f coverage.txt
 	@rm -rf /tmp/build
+	@rm coverage.html
 
-test:
+plugins/dummy.go:
+	@echo 'package main' > plugins/dummy.go
+
+test: coverage.txt
 	@go vet ./...
-	@go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 	@go mod verify
+
+coverage.txt: plugins/dummy.so *.go */*.go
+	@go test -covermode=atomic -count=1 -coverprofile=coverage.txt ./...
+
+coverage.html: coverage.txt
+	@go tool cover -html=coverage.txt -o coverage.html
 
 format:
 	@gofmt -s -w .

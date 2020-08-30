@@ -1,14 +1,13 @@
 package config
 
 import (
+	"janmarten.name/nv/debug"
 	"os"
+	"sort"
 )
 
 // Environment holds the environment variables expressed in Variables.
 var Environment = make(Variables, 0)
-
-// DefaultEncoding is the default encoding format.
-var DefaultEncoding = "text"
 
 // Variable is a struct representing a configuration entry by Key and Value.
 type Variable struct {
@@ -25,6 +24,21 @@ func init() {
 		for _, line := range os.Environ() {
 			vars, _ := enc.Decode([]byte(line))
 			Environment = append(Environment, vars...)
+		}
+	})
+	debug.RegisterCallback("Config", func() debug.Messages {
+		return debug.Messages{
+			"Env": func(vars Variables) []string {
+				result := make([]string, 0)
+
+				for _, v := range vars {
+					result = append(result, v.Key)
+				}
+
+				sort.Strings(result)
+
+				return result
+			}(Environment),
 		}
 	})
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"janmarten.name/nv/debug"
 	"os/exec"
 	"regexp"
 	"testing"
@@ -43,5 +44,13 @@ func TestMain_illegal(t *testing.T) {
 
 	if cmd.ProcessState.ExitCode() == 0 {
 		t.Error("Program exited zero code, but expected non-zero code")
+	}
+}
+
+func TestInit_main(t *testing.T) {
+	got, ok := debug.Scope("Main").GetMessages()["Version"].(string)
+
+	if !ok || got != version {
+		t.Errorf("Unexpected version. Want %q, got %q", version, got)
 	}
 }

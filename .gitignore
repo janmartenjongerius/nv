@@ -1,4 +1,5 @@
 plugins/**.so
+plugins/dummy.*
 nv
 docs/man
 docs/markdown
@@ -6,4 +7,4 @@ docs/rst
 docs/yaml
 dist/
 bin/
-coverage.txt
+coverage.*

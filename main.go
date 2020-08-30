@@ -17,18 +17,44 @@ package main
 import (
 	"fmt"
 	"janmarten.name/nv/cmd"
+	"janmarten.name/nv/debug"
 	"os"
 	"os/exec"
+	"os/user"
+	"runtime"
 	"strings"
 )
 
 var version = ""
+
+func isDevMode() bool {
+	return version == "" || strings.HasPrefix(version, "dev")
+}
 
 func init() {
 	if len(version) == 0 {
 		tag, _ := exec.Command("git", "describe", "--tags").Output()
 		version = fmt.Sprintf("dev-%s", strings.TrimSpace(string(tag)))
 	}
+
+	debug.RegisterCallback("Main", func() debug.Messages {
+		wd, _ := os.Getwd()
+		host, _ := os.Hostname()
+		usr, _ := user.Current()
+
+		return debug.Messages{
+			"Version":           version,
+			"Platform":          fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
+			"Runtime":           runtime.Version(),
+			"Compiler":          runtime.Compiler,
+			"Threads":           uint8(runtime.GOMAXPROCS(0)),
+			"Working directory": wd,
+			"Hostname":          host,
+			"User":              usr.Username,
+			"Args":              os.Args,
+			"DevMode":           isDevMode(),
+		}
+	})
 }
 
 func main() {

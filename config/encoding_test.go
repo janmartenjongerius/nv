@@ -1,6 +1,10 @@
 package config
 
-import "testing"
+import (
+	"janmarten.name/nv/debug"
+	"reflect"
+	"testing"
+)
 
 func TestGetEncodings(t *testing.T) {
 	for _, format := range GetEncodings() {
@@ -40,5 +44,17 @@ func TestHasEncoding(t *testing.T) {
 				t.Errorf("HasEncoding(%q) != %v", c.in, c.want)
 			}
 		})
+	}
+}
+
+func TestInit(t *testing.T) {
+	got := debug.Scope("Encoding").GetMessages()
+	want := debug.Messages{
+		"Default": DefaultEncoding,
+		"Formats": GetEncodings(),
+	}
+
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("Unexpected debug messages. Want: %q, got: %q", want, got)
 	}
 }

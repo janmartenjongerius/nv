@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"janmarten.name/nv/debug"
 	"sort"
 )
 
@@ -9,8 +10,11 @@ var (
 	// ErrUnknownEncoding is returned when an unknown encoding is requested using NewEncoding.
 	ErrUnknownEncoding = errors.New("unknown encoding requested")
 
-	// ErrIllFormattedVariable is returned when a payload contains a line that cannot be resolved to a config.Variable.
+	// ErrIllFormattedVariable is returned when a payload contains a line that cannot be resolved to a Variable.
 	ErrIllFormattedVariable = errors.New("variable is incorrectly formatted")
+
+	// DefaultEncoding is the default encoding format.
+	DefaultEncoding = "text"
 
 	// Registry of Encoding instances.
 	encodings = make(map[string]Encoding)
@@ -97,4 +101,13 @@ func GetEncodings() []string {
 func HasEncoding(format string) bool {
 	_, has := encodings[format]
 	return has
+}
+
+func init() {
+	debug.RegisterCallback("Encoding", func() debug.Messages {
+		return debug.Messages{
+			"Default": DefaultEncoding,
+			"Formats": GetEncodings(),
+		}
+	})
 }
