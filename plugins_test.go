@@ -89,7 +89,7 @@ func TestInit_debug(t *testing.T) {
 		found += len(files)
 	}
 
-	if found != len(pluginsLoaded) + len(pluginsRejected) {
+	if found != len(pluginsLoaded)+len(pluginsRejected) {
 		t.Errorf(
 			"Not all plugins were mapped. Want %q, got %v + %v",
 			fileMap,
