@@ -1,6 +1,16 @@
+/*
+Package debug exposes hooks and tools to provide and read out debugging
+information about the application.
+
+
+ */
 package debug
 
-import "sort"
+import (
+	"runtime"
+	"sort"
+	"strings"
+)
 
 var callbacks = make(map[Scope]Callback)
 
@@ -16,14 +26,37 @@ type Scope string
 // GetMessages invokes the callback registered for the current scope and returns
 // the resulting Messages.
 func (s Scope) GetMessages() Messages {
-	return callbacks[s]()
+	if cb, ok := callbacks[s]; ok == true {
+		return cb()
+	}
+
+	return Messages{}
 }
 
-// RegisterCallback will register a debugging callback against the given scope.
-// Calling this method multiple times with the same scope will override any
-// previous registrations.
-func RegisterCallback(scope Scope, cb Callback) {
+// newScope returns a new Scope referencing the scope in which newScope was called.
+func newScope(skip int) *Scope {
+	if pc, _, _, ok := runtime.Caller(1 + skip); ok == true {
+		frames := runtime.CallersFrames([]uintptr{pc})
+
+		for {
+			frame, _ := frames.Next()
+			scope := Scope(
+				strings.TrimPrefix(frame.Function, "janmarten.name/"))
+
+			return &scope
+		}
+	}
+
+	return nil
+}
+
+// RegisterCallback will register a debugging callback against the current scope.
+func RegisterCallback(cb Callback) Scope {
+	scope := *newScope(1)
+
 	callbacks[scope] = cb
+
+	return scope
 }
 
 // ScopeWalker is a func that receives a call for each debug scope.
@@ -62,7 +95,7 @@ func Walk(scopeWalker ScopeWalker) {
 }
 
 func init() {
-	RegisterCallback("Debug", func() Messages {
+	RegisterCallback(func() Messages {
 		return Messages{
 			"Callbacks": func(callbacks map[Scope]Callback) []string {
 				result := make([]string, 0)

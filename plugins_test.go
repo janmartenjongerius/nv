@@ -59,7 +59,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestInit_debug(t *testing.T) {
-	got := debug.Scope("Plugins").GetMessages()
+	got := debug.Scope("nv.init.1").GetMessages()
 
 	if !reflect.DeepEqual(pluginsLoaded, got["Loaded"]) {
 		t.Errorf(

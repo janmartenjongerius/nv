@@ -48,7 +48,7 @@ func TestHasEncoding(t *testing.T) {
 }
 
 func TestInit(t *testing.T) {
-	got := debug.Scope("Encoding").GetMessages()
+	got := debug.Scope("nv/config.init.1").GetMessages()
 	want := debug.Messages{
 		"Default": DefaultEncoding,
 		"Formats": GetEncodings(),

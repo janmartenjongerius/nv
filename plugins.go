@@ -107,7 +107,7 @@ func init() {
 
 	pluginsLoaded, pluginsRejected = pluginPatterns.mustLoad()
 
-	debug.RegisterCallback("Plugins", func() debug.Messages {
+	debug.RegisterCallback(func() debug.Messages {
 		return debug.Messages{
 			"Loaded":   pluginsLoaded,
 			"Rejected": pluginsRejected,

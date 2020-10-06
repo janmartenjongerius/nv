@@ -37,7 +37,7 @@ func init() {
 		version = fmt.Sprintf("dev-%s", strings.TrimSpace(string(tag)))
 	}
 
-	debug.RegisterCallback("Main", func() debug.Messages {
+	debug.RegisterCallback(func() debug.Messages {
 		wd, _ := os.Getwd()
 		host, _ := os.Hostname()
 		usr, _ := user.Current()

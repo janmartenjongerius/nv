@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-func TestInit_config(t *testing.T) {
-	got := debug.Scope("Config").GetMessages()
+func TestConfig_init(t *testing.T) {
+	got := debug.Scope("nv/config.WithEncoding").GetMessages()
 	vars, ok := got["Env"].([]string)
 
 	if !ok {

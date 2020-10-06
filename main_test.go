@@ -47,8 +47,8 @@ func TestMain_illegal(t *testing.T) {
 	}
 }
 
-func TestInit_main(t *testing.T) {
-	got, ok := debug.Scope("Main").GetMessages()["Version"].(string)
+func TestMain_init(t *testing.T) {
+	got, ok := debug.Scope("nv.init.0").GetMessages()["Version"].(string)
 
 	if !ok || got != version {
 		t.Errorf("Unexpected version. Want %q, got %q", version, got)

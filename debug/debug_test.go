@@ -17,10 +17,10 @@ func TestWalk(t *testing.T) {
 		}
 	})
 
-	scope := Scope("Debug")
+	scope := Scope("nv/debug.init.0")
 	want[scope] = make(map[string][]interface{})
 	want[scope]["Callbacks"] = []interface{}{
-		[]string{"Debug"},
+		[]string{"nv/debug.init.0"},
 	}
 
 	if !reflect.DeepEqual(want, got) {
@@ -29,9 +29,7 @@ func TestWalk(t *testing.T) {
 }
 
 func TestRegisterCallback(t *testing.T) {
-	scope := Scope(t.Name())
-
-	RegisterCallback(scope, func() Messages {
+	scope := RegisterCallback(func() Messages {
 		return Messages{t.Name(): true}
 	})
 
@@ -53,5 +51,22 @@ func TestScope_GetMessages(t *testing.T) {
 				t.Errorf("Unexpected scope messages. Want %v, got %v", want, got)
 			}
 		})
+	}
+}
+
+func TestScope_GetMessages_unknown_scope(t *testing.T) {
+	want := Messages{}
+	got := Scope("unknown").GetMessages()
+
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("Unexpected messages. Want %v, got %v", want, got)
+	}
+}
+
+func TestNewScope(t *testing.T) {
+	scope := newScope(200)
+
+	if scope != nil {
+		t.Errorf("Expected no scope, got: %v", scope)
 	}
 }

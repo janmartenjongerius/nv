@@ -104,7 +104,7 @@ func HasEncoding(format string) bool {
 }
 
 func init() {
-	debug.RegisterCallback("Encoding", func() debug.Messages {
+	debug.RegisterCallback(func() debug.Messages {
 		return debug.Messages{
 			"Default": DefaultEncoding,
 			"Formats": GetEncodings(),

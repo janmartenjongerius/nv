@@ -102,7 +102,7 @@ clean:
 	@rm -rf docs/yaml
 	@rm -f coverage.txt
 	@rm -rf /tmp/build
-	@rm coverage.html
+	@rm -f coverage.html
 
 plugins/dummy.go:
 	@echo 'package main' > plugins/dummy.go
