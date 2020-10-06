@@ -1,9 +1,7 @@
 /*
 Package debug exposes hooks and tools to provide and read out debugging
 information about the application.
-
-
- */
+*/
 package debug
 
 import (
