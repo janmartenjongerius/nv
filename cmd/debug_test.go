@@ -30,12 +30,12 @@ func TestDebugCmd_RunE(t *testing.T) {
 	want := regexp.MustCompile(
 		`(?sm)^Nv debug:
 
-nv/config\.WithEncoding\s+Env\s+\[.+?]
+nv/config\.init\.0\s+Env\s+\[.+?]
 
 nv/config\.init\.1\s+Default\s+text
 \s+Formats\s+\[.+?]
 
-nv/debug\.init\.0\s+Callbacks\s+\[nv/config\.WithEncoding nv/config\.init\.1 nv/debug\.init\.0( nv\.init\.0 nv\.init\.1)?]`)
+nv/debug\.init\.0\s+Callbacks\s+\[nv/config\.init\.0 nv/config\.init\.1 nv/debug\.init\.0]`)
 
 	if !want.MatchString(got) {
 		t.Errorf("Could not match output against %q:\n%v", want, got)

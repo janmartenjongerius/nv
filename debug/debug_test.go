@@ -66,7 +66,7 @@ func TestScope_GetMessages_unknown_scope(t *testing.T) {
 func TestNewScope(t *testing.T) {
 	scope := newScope(200)
 
-	if scope != nil {
-		t.Errorf("Expected no scope, got: %v", scope)
+	if string(scope) != "" {
+		t.Errorf("Expected no scope, got: %q", scope)
 	}
 }

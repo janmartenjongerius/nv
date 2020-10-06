@@ -26,6 +26,7 @@ func init() {
 			Environment = append(Environment, vars...)
 		}
 	})
+
 	debug.RegisterCallback(func() debug.Messages {
 		return debug.Messages{
 			"Env": func(vars Variables) []string {

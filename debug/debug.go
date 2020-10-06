@@ -32,25 +32,32 @@ func (s Scope) GetMessages() Messages {
 }
 
 // newScope returns a new Scope referencing the scope in which newScope was called.
-func newScope(skip int) *Scope {
-	if pc, _, _, ok := runtime.Caller(1 + skip); ok == true {
-		frames := runtime.CallersFrames([]uintptr{pc})
+func newScope(skip int) Scope {
+	var (
+		scope Scope
+		pc    = make([]uintptr, 100)
+	)
+
+	if n := runtime.Callers(2+skip, pc); n > 0 {
+		pc = pc[:n]
+		frames := runtime.CallersFrames(pc)
 
 		for {
 			frame, _ := frames.Next()
-			scope := Scope(
+
+			scope = Scope(
 				strings.TrimPrefix(frame.Function, "janmarten.name/"))
 
-			return &scope
+			break
 		}
 	}
 
-	return nil
+	return scope
 }
 
 // RegisterCallback will register a debugging callback against the current scope.
 func RegisterCallback(cb Callback) Scope {
-	scope := *newScope(1)
+	scope := newScope(1)
 
 	callbacks[scope] = cb
 

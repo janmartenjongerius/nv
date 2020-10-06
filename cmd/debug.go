@@ -31,7 +31,7 @@ var (
 			writer := new(tabwriter.Writer)
 			writer.Init(
 				cmd.OutOrStdout(),
-				12,
+				24,
 				8,
 				2,
 				[]byte(" ")[0],
