@@ -20,16 +20,15 @@ The config.Encoder will output:
 	</Config>
 
 */
-package main
+package config
 
 import (
 	"encoding/xml"
-	"janmarten.name/nv/config"
 )
 
 // config.Encoder for config.Variables represented in XML.
 type xmlEncoder struct {
-	config.Encoder
+	Encoder
 }
 
 // A struct representing configuration Variable entries.
@@ -46,7 +45,7 @@ type xmlVariable struct {
 }
 
 // Encode allows to encode config.Variable structs into a byte sequence.
-func (e xmlEncoder) Encode(variables ...*config.Variable) ([]byte, error) {
+func (e xmlEncoder) Encode(variables ...*Variable) ([]byte, error) {
 	vars := xmlVariables{}
 
 	for _, v := range variables {
@@ -61,17 +60,17 @@ func (e xmlEncoder) Encode(variables ...*config.Variable) ([]byte, error) {
 
 // config.Decoder for config.Variables represented in XML.
 type xmlDecoder struct {
-	config.Decoder
+	Decoder
 }
 
 // Decode allows to decode a byte sequence into a list of config.Variables.
-func (d xmlDecoder) Decode(payload []byte) (config.Variables, error) {
+func (d xmlDecoder) Decode(payload []byte) (Variables, error) {
 	cfg := xmlConfig{}
-	result := config.Variables{}
+	result := Variables{}
 	e := xml.Unmarshal(payload, &cfg)
 
 	for _, v := range cfg.Variables {
-		result = append(result, &config.Variable{
+		result = append(result, &Variable{
 			Key:   v.Key,
 			Value: v.Value,
 		})
@@ -81,7 +80,7 @@ func (d xmlDecoder) Decode(payload []byte) (config.Variables, error) {
 }
 
 func init() {
-	config.RegisterEncoding(
+	RegisterEncoding(
 		"xml",
 		struct {
 			xmlEncoder

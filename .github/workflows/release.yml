@@ -29,7 +29,6 @@ jobs:
       matrix:
         package:
           - nv_amd64.deb
-          - nv_ext_encoding-xml.deb
     name: Build ${{ matrix.package }}
     needs: [draft]
     env:

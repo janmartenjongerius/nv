@@ -1,27 +1,26 @@
-package main
+package config
 
 import (
 	"fmt"
-	"janmarten.name/nv/config"
 	"reflect"
 	"testing"
 )
 
 var encodeTests = []struct {
-	in   config.Variables
+	in   Variables
 	want []byte
 }{
 	{
-		in: config.Variables{
-			&config.Variable{
+		in: Variables{
+			&Variable{
 				Key:   "HOME",
 				Value: "C:\\Users\\Gopher",
 			},
-			&config.Variable{
+			&Variable{
 				Key:   "USERNAME",
 				Value: "Gopher",
 			},
-			&config.Variable{
+			&Variable{
 				Key:   "EMAIL",
 				Value: "Gopher <gopher@golang.goph>",
 			},
@@ -33,13 +32,13 @@ var encodeTests = []struct {
 </Config>`),
 	},
 	{
-		in:   config.Variables{},
+		in:   Variables{},
 		want: []byte(`<Config></Config>`),
 	},
 }
 
 func TestXmlEncoder_Encode(t *testing.T) {
-	enc, err := config.NewEncoding("xml")
+	enc, err := NewEncoding("xml")
 
 	if err != nil {
 		fmt.Println(err)
@@ -73,7 +72,7 @@ func TestXmlEncoder_Encode(t *testing.T) {
 
 var decodeTests = []struct {
 	in   []byte
-	want config.Variables
+	want Variables
 }{
 	{
 		in: []byte(`
@@ -84,16 +83,16 @@ var decodeTests = []struct {
 		</Config>
 
 `),
-		want: config.Variables{
-			&config.Variable{
+		want: Variables{
+			&Variable{
 				Key:   "HOME",
 				Value: "C:\\Users\\Gopher",
 			},
-			&config.Variable{
+			&Variable{
 				Key:   "USERNAME",
 				Value: "Gopher",
 			},
-			&config.Variable{
+			&Variable{
 				Key:   "EMAIL",
 				Value: "Gopher <gopher@golang.goph>",
 			},
@@ -101,12 +100,12 @@ var decodeTests = []struct {
 	},
 	{
 		in:   []byte(`<Config></Config>`),
-		want: config.Variables{},
+		want: Variables{},
 	},
 }
 
 func TestXmlDecoder_Decode(t *testing.T) {
-	enc, err := config.NewEncoding("xml")
+	enc, err := NewEncoding("xml")
 
 	if err != nil {
 		fmt.Println(err)

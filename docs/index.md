@@ -6,14 +6,11 @@ cross platform.
 
 # Download
 
-Current version: [![Stable version](https://img.shields.io/github/v/release/johmanx10/nv?include_prereleases&label=)](https://github.com/johmanx10/nv/releases/latest)
+## 64-Bit
 
-## Debian linux 
-
-[![DEB 64-bit](https://img.shields.io/badge/Nv-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_amd64.deb)
-
-### Plugins
-- [![DEB 64 Bit](https://img.shields.io/badge/Encoding:%20XML-64--Bit-c60036?logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_ext_encoding-xml.deb)
+| Operating system | Package |
+|:-----------------|:--------|
+| Debian Linux     | [![Download](https://img.shields.io/github/v/release/johmanx10/nv?include_prereleases&label=&color=c60036&logo=debian)](https://github.com/johmanx10/nv/releases/latest/download/nv_amd64.deb) |
 
 ## Install from source
 
